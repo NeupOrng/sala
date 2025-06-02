@@ -29,6 +29,7 @@ export const Students = pgTable("students", {
   phoneNumber: varchar("phone_number", { length: 20 }),
   guardianName: varchar("guardian_name", { length: 255 }),
   guardianPhone: varchar("guardian_phone", { length: 20 }),
+  guardianEmail: varchar("guardian_email", { length: 255 }),
   relationshipToStudent: varchar("relationship_to_student", { length: 50 }),
   academicYear: varchar("academic_year", { length: 24 }),
   isDeleted: boolean("is_deleted").notNull().default(false),
