@@ -1,6 +1,6 @@
 {
-  "id": "9ae6ac78-86b5-4008-ba2c-220a164f2158",
-  "prevId": "2dc3c266-edd9-4618-86fc-e211763292e4",
+  "id": "c442f380-65e6-42c0-809e-4439fb3cb2a3",
+  "prevId": "9ae6ac78-86b5-4008-ba2c-220a164f2158",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -85,6 +85,12 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "nationality": {
+          "name": "nationality",
+          "type": "varchar(56)",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},

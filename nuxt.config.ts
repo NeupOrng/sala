@@ -1,12 +1,13 @@
-
 import tailwindcss from "@tailwindcss/vite"
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
-  modules: [
-    '@pinia/nuxt'
-  ],
+  modules: ['@pinia/nuxt', 'shadcn-nuxt'],
+  shadcn: {
+    prefix: '',
+    componentDir: './components/ui'
+  },
   vite: {
     plugins: [
       tailwindcss()
@@ -19,5 +20,5 @@ export default defineNuxtConfig({
     optimizeDeps: {
       exclude: ['pg'],
     },
-  },
+  }
 })
