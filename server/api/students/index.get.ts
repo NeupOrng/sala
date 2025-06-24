@@ -1,10 +1,16 @@
 import { db } from "~/server/utils/db";
 import { Schools } from "~/server/schema/schools";
 import { Students } from "~/server/schema/students";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
+import { getHeader } from "~/server/utils/common";
+import { BadRequestException } from "~/server/dto/response/exception/bad-request";
 
 export default defineEventHandler(async (event) => {
-  console.log("event get", event);
+  const schoolId = getHeader(event, "school_id");
+  console.log("event get", schoolId);
+  if (schoolId === undefined) {
+   throw new BadRequestException("Missing school_id header");
+  }
   return await db
     .select({
       id: Students.id,
@@ -16,5 +22,10 @@ export default defineEventHandler(async (event) => {
     })
     .from(Students)
     .innerJoin(Schools, eq(Students.schoolId, Schools.id))
-    .where(eq(Students.status, "active"));
+    .where(
+        and(
+            eq(Students.status, "active"),
+            eq(Students.schoolId, schoolId)
+        )
+    );
 });
