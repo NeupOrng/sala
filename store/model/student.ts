@@ -6,6 +6,16 @@ export interface IStudent {
   middleName?: string;
   lastName: string;
   studentIdNumber: string;
+  status: string;
+  email: string;
+  nationality: string;
+  gender: string;
+  dateOfBirth: Date;
+  phoneNumber: string;
+  guardianName: string;
+  guardianPhone: string;
+  guardianEmail: string;
+  relationToStudent: string;
   school: ISchool;
 }
 
@@ -15,6 +25,16 @@ export class Student implements IStudent {
   middleName?: string;
   lastName: string;
   studentIdNumber: string;
+  status: string;
+  email: string;
+  nationality: string;
+  gender: string;
+  dateOfBirth: Date;
+  phoneNumber: string;
+  guardianName: string;
+  guardianPhone: string;
+  guardianEmail: string;
+  relationToStudent: string;
   school: ISchool;
 
   constructor(json: any) {
@@ -24,12 +44,22 @@ export class Student implements IStudent {
     this.lastName = json.lastName;
     this.studentIdNumber = json.studentIdNumber;
     this.school = json.school;
+    this.status = json.status;
+    this.email = json.email;
+    this.nationality = json.email;
+    this.gender = json.gender;
+    this.dateOfBirth = new Date(json.dateOfBirth);
+    this.phoneNumber = json.phoneNumber;
+    this.guardianName = json.guardianName;
+    this.guardianPhone = json.guardianPhone;
+    this.guardianEmail = json.guardianEmail;
+    this.relationToStudent = json.relationToStudent;
   }
 
   get fullname(): string {
-    if(this.middleName) {
-        return `${this.lastName} ${this.middleName} ${this.firstName}`
+    if (this.middleName) {
+      return `${this.lastName} ${this.middleName} ${this.firstName}`;
     }
-    return `${this.lastName} ${this.firstName}`
+    return `${this.lastName} ${this.firstName}`;
   }
 }

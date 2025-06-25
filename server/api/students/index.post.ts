@@ -37,6 +37,7 @@ export default defineEventHandler(async (event) => {
   const [newStudent] = await db
     .insert(Students)
     .values({
+    // @ts-ignore
       schoolId: request.schoolId,
       firstName: request.firstName,
       middleName: request.middleName,

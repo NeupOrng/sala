@@ -4,6 +4,7 @@ import { Students } from "~/server/schema/students";
 import { and, eq } from "drizzle-orm";
 import { getHeader } from "~/server/utils/common";
 import { BadRequestException } from "~/server/dto/response/exception/bad-request";
+import Student from "~/pages/student.vue";
 
 export default defineEventHandler(async (event) => {
   const schoolId = getHeader(event, "school_id");
@@ -18,7 +19,17 @@ export default defineEventHandler(async (event) => {
       middleName: Students.middleName,
       lastName: Students.lastName,
       studentIdNumber: Students.studentIdNumber,
-      school: Schools,
+      status: Students.status,
+      email: Students.email,
+      nationality: Students.nationality,
+      gender: Students.gender,
+      dateOfBirth: Students.dateOfBirth,
+      phoneNumber: Students.phoneNumber,
+      guardianName: Students.guardianName,
+      guardianPhone: Students.guardianPhone,
+      guardianEmail: Students.guardianEmail,
+      relationToStudent: Students.relationshipToStudent,
+      school: Schools
     })
     .from(Students)
     .innerJoin(Schools, eq(Students.schoolId, Schools.id))
