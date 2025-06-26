@@ -29,7 +29,8 @@ export default defineEventHandler(async (event) => {
       guardianPhone: Students.guardianPhone,
       guardianEmail: Students.guardianEmail,
       relationToStudent: Students.relationshipToStudent,
-      school: Schools
+      school: Schools,
+      photoUrl: Students.photoUrl
     })
     .from(Students)
     .innerJoin(Schools, eq(Students.schoolId, Schools.id))

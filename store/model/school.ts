@@ -1,4 +1,5 @@
 export interface ISchool {
     id: string,
-    name: string
+    name: string,
+    shortName: string,
 }

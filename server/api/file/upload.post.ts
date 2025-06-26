@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
   const stream = fs.createReadStream(file.filepath);
 
   const uploadParams = {
-    Bucket: "my-bucket",
+    Bucket: "sala-bucket",
     Key: file.originalFilename || "upload.dat",
     Body: stream,
     ContentType: file.mimetype || "application/octet-stream",

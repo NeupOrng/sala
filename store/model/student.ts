@@ -65,4 +65,11 @@ export class Student implements IStudent {
     }
     return `${this.lastName} ${this.firstName}`;
   }
+
+  get toRequestString(): string {
+    if (this.photoUrl) {
+      this.photoUrl = this.photoUrl.split('?t=')[0];
+    }
+    return JSON.stringify(this);
+  }
 }

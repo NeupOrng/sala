@@ -6,11 +6,12 @@ export const useSchoolStore = defineStore("schools", {
     school: {
       id: "",
       name: "",
+      shortName: "",
     } as ISchool,
   }),
   actions: {
     async fetchSchools() {
-      this.school = await $fetch("/api/schools");
+      this.school = await $fetch("/api/schools") as unknown as ISchool;
     },
 
     async initialize() {
@@ -18,6 +19,7 @@ export const useSchoolStore = defineStore("schools", {
       this.school = {
         id: "5b8ad78c-3a3c-402b-9739-237d41b7ec7a",
         name: "DataU Academy",
+        shortName: "DAU",
       };
     //   addNotification({
     //     title: 'Noted!',

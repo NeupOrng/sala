@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const { studentId } = await readBody(event);
   const key = `students/${studentId}/photo.jpg`;
   const command = new PutObjectCommand({
-    Bucket: "my-bucket",
+    Bucket: "sala-bucket",
     Key: key,
     ContentType: 'image/jpeg',
   });

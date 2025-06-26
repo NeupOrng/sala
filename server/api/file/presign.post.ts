@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const { filename, type } = await readBody(event);
   console.log("presign", filename, type);
   const command = new PutObjectCommand({
-    Bucket: "my-bucket",
+    Bucket: "sala-bucket",
     Key: filename,
     ContentType: type,
   });

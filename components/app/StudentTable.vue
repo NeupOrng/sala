@@ -13,6 +13,7 @@ defineProps<{
   students: Student[]
   onSaveStudent: (student: Student) => void
   onDeleteStudent: (student: Student) => void
+  onUploadImage: (file: File, studentId: string) => Promise<string>;
 }>();
 const selectedStudent = ref<Student | null>(null);
 </script>
@@ -25,7 +26,6 @@ const selectedStudent = ref<Student | null>(null);
           <TableHead>Student ID</TableHead>
           <TableHead>Full Name</TableHead>
           <TableHead>Gender</TableHead>
-          <TableHead>School</TableHead>
           <TableHead>Phone</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Action</TableHead>
@@ -37,7 +37,6 @@ const selectedStudent = ref<Student | null>(null);
           <TableCell>{{ student.studentIdNumber }}</TableCell>
           <TableCell>{{ student.fullname }}</TableCell>
           <TableCell>{{ student.gender }}</TableCell>
-          <TableCell>{{ student.school.name }}</TableCell>
           <TableCell>{{ student.phoneNumber }}</TableCell>
           <TableCell>{{ student.email }}</TableCell>
           <TableCell>
@@ -47,9 +46,11 @@ const selectedStudent = ref<Student | null>(null);
       </TableBody>
     </Table>
     <AppEditStudentTableDialog
-      :student="selectedStudent"
+      v-if="selectedStudent"
+      :student="selectedStudent as Student | null"
       :onSave="onSaveStudent"
       :onDelete="onDeleteStudent"
+      :onUploadImage="onUploadImage"
       @close="selectedStudent = null"
     />
   </div>
