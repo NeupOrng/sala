@@ -53,7 +53,8 @@ export default defineEventHandler(async (event) => {
       guardianEmail: request.guardianEmail,
       relationshipToStudent: request.relationshipToStudent,
       academicYear: request.academicYear,
-      status: "active", // you can adjust this default
+      status: "active",
+      photoUrl: request.photoUrl,
     })
     .returning();
 

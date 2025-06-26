@@ -13,6 +13,7 @@ export interface ICreateStudentRequest {
   guardianEmail: string;
   relationshipToStudent: string;
   academicYear: string;
+  photoUrl: string;
 }
 
 export class CreateStudentRequest implements ICreateStudentRequest {
@@ -30,6 +31,8 @@ export class CreateStudentRequest implements ICreateStudentRequest {
   guardianEmail: string;
   relationshipToStudent: string;
   academicYear: string;
+  photoUrl: string;
+
 
   constructor(json: any) {
     this.schoolId = String(json?.schoolId ?? "");
@@ -46,5 +49,6 @@ export class CreateStudentRequest implements ICreateStudentRequest {
     this.guardianEmail = String(json?.guardianEmail ?? "");
     this.relationshipToStudent = String(json?.relationshipToStudent ?? "");
     this.academicYear = String(json?.academicYear ?? "");
+    this.photoUrl = json?.photoUrl ?? "";
   }
 }

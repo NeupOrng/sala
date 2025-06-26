@@ -33,6 +33,7 @@ export const Students = pgTable("students", {
   relationshipToStudent: varchar("relationship_to_student", { length: 50 }),
   academicYear: varchar("academic_year", { length: 24 }),
   isDeleted: boolean("is_deleted").notNull().default(false),
+  photoUrl: varchar("photo_url", { length: 1024 }),
 }, (student) => ({
     uniqueStudentIdPerSchool: unique().on(student.schoolId, student.studentIdNumber),
 }));

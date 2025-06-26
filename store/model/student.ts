@@ -17,6 +17,7 @@ export interface IStudent {
   guardianEmail: string;
   relationToStudent: string;
   school: ISchool;
+  photoUrl: string;
 }
 
 export class Student implements IStudent {
@@ -36,6 +37,7 @@ export class Student implements IStudent {
   guardianEmail: string;
   relationToStudent: string;
   school: ISchool;
+  photoUrl: string;
 
   constructor(json: any) {
     this.id = json.id;
@@ -54,6 +56,7 @@ export class Student implements IStudent {
     this.guardianPhone = json.guardianPhone;
     this.guardianEmail = json.guardianEmail;
     this.relationToStudent = json.relationToStudent;
+    this.photoUrl = json.photoUrl;
   }
 
   get fullname(): string {
