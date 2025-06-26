@@ -6,6 +6,10 @@ const studentStore = useStudentStore();
 </script>
 <template>
   <ClientOnly>
-    <AppStudentTable :students="studentStore.students" />
+    <AppStudentTable 
+        :students="studentStore.students" 
+        :onSaveStudent="studentStore.editStudent"
+        :onDeleteStudent="studentStore.deleteStudent"
+        />
   </ClientOnly>
 </template>

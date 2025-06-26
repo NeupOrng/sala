@@ -41,5 +41,12 @@ export const useStudentStore = defineStore("students", {
         console.error("Unexpected error fetching students:", err);
       }
     },
+
+    async editStudent(student: Student) {
+        console.log('edit', student)
+    },
+    async deleteStudent(student: Student) {
+        console.log('delete', student)
+    }
   },
 });
