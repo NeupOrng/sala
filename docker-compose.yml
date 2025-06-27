@@ -12,7 +12,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: sala
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./volumes/postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
@@ -25,14 +25,20 @@ services:
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
-    # using the "server" command with a data directory
     command: server /data --console-address ":9001"
     ports:
       - "9000:9000"   # S3 API
       - "9001:9001"   # Web console
     volumes:
-      - minio_data:/data
+      - ./volumes/minio:/data
 
-volumes:
-  postgres_data:
-  minio_data:
+  # ───────────────────────────────────────────────
+  # Redis in-memory data store
+  redis:
+    image: redis:7
+    container_name: my_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./volumes/redis:/data
