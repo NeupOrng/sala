@@ -1,0 +1,403 @@
+curl --location 'https://local-spi-staging.private-b-kh1n.ascendmoney.io/local-spi/spi/receive/notification/push/chatbot' \
+--header 'Content-Type: application/json' \
+--data '{
+    "notification_id": "SYNC",
+    "data": {
+        "order_id": "25061009343024130363473",
+        "ext_transaction_id": "31e1636bc19adbe4",
+        "payment_method": {
+            "payment_method_name": "Normal payment",
+            "payment_method_ref": "997"
+        },
+        "service_id": null,
+        "service_group_id": null,
+        "service_command_id": 20,
+        "product_service": {
+            "id": 18,
+            "name": "fund-out_submaster-cash-out_agent_usd",
+            "currency": "USD"
+        },
+        "product_command": {
+            "id": 1,
+            "name": "Payment"
+        },
+        "product": {
+            "product_name": null,
+            "product_ref1": "2717011616515",
+            "product_ref2": null,
+            "product_ref3": null,
+            "product_ref4": null,
+            "product_ref5": null
+        },
+        "initiator_user": {
+            "id": 11290,
+            "type": "agent",
+            "sof_id": 1344620,
+            "sof_type_id": 2,
+            "ref_type": null,
+            "ref_value": null,
+            "phone_number": null,
+            "category": null
+        },
+        "payer_user": {
+            "id": 11290,
+            "type": "agent",
+            "sof_id": 1344620,
+            "sof_type_id": 2,
+            "ref_type": "access token",
+            "ref_value": "8ea08be7-5746-47c4-a0c2-95e05d01b59b",
+            "phone_number": null,
+            "category": null
+        },
+        "payee_user": {
+            "id": 11290,
+            "type": "agent",
+            "sof_id": 151,
+            "sof_type_id": 2,
+            "ref_type": null,
+            "ref_value": null,
+            "phone_number": null,
+            "category": null
+        },
+        "requestor_user": {
+            "id": null,
+            "type": null,
+            "sof_id": null,
+            "sof_type_id": null,
+            "ref_type": null,
+            "ref_value": null,
+            "phone_number": null,
+            "category": null
+        },
+        "currency": "USD",
+        "amount": 1.0,
+        "fee": 0.0,
+        "bonus": 0.0,
+        "state": "SUCCESS",
+        "status": 2,
+        "status_name": "EXECUTED",
+        "is_deleted": 0,
+        "additional_references": [
+            {
+                "key": "channelId",
+                "value": "2"
+            },
+            {
+                "key": "referenceNumber",
+                "value": "N/A"
+            },
+            {
+                "key": "externalReference",
+                "value": "N/A"
+            },
+            {
+                "key": "exchange_transaction_id",
+                "value": "0"
+            },
+            {
+                "key": "is_cross_currency",
+                "value": "N"
+            },
+            {
+                "key": "info",
+                "value": "{\"core-app-version\":\"2.0.0-21-hotfix\",\"customerPhone\":\"0969988027\",\"app-name\":\"phone-top-up-staging\"}"
+            },
+            {
+                "key": "operatorId",
+                "value": "1"
+            },
+            {
+                "key": "operator",
+                "value": "smart"
+            },
+            {
+                "key": "denomination",
+                "value": "1"
+            },
+            {
+                "key": "phoneNumber",
+                "value": "0969988027"
+            },
+            {
+                "key": "serialNumber",
+                "value": "888400045352"
+            },
+            {
+                "key": "pinId",
+                "value": "107751"
+            },
+            {
+                "key": "expiredDate",
+                "value": "9999-01-01T00:00:00.000+0000"
+            },
+            {
+                "key": "aggregator",
+                "value": "N/A"
+            },
+            {
+                "key": "txPaymentTokenId",
+                "value": "N/A"
+            }
+        ],
+        "voucher_reference": null,
+        "order_balance_movements": [
+            {
+                "order_balance_movement_id": "25061009343024130363473-01",
+                "order_id": "25061009343024130363473",
+                "short_order_id": "57SSBT3L",
+                "remark": "",
+                "action_type": "credit",
+                "actor_user_id": null,
+                "sof_id": 12,
+                "sof_type_id": 2,
+                "amount": 1.0,
+                "fee_related": false,
+                "status": 2,
+                "is_deleted": 0,
+                "created_timestamp": "2025-06-10T09:34:30Z",
+                "last_updated_timestamp": "2025-06-10T09:34:41Z",
+                "user_id": 129,
+                "user_type": {
+                    "id": 2,
+                    "name": "agent"
+                },
+                "amount_type": "Amount",
+                "actor_type": "Specific ID",
+                "post_balance": 1.05821678394E7,
+                "pre_balance": 1.05821668394E7,
+                "debt_balance": 0.0,
+                "voucher_id": null,
+                "voucher_code": null,
+                "error_code": null,
+                "error_message": null,
+                "original_balance_movement_id": null,
+                "rule_id": null
+            },
+            {
+                "order_balance_movement_id": "25061009343024130363473-02",
+                "order_id": "25061009343024130363473",
+                "short_order_id": "57SSBT3L",
+                "remark": "",
+                "action_type": "credit",
+                "actor_user_id": null,
+                "sof_id": 12,
+                "sof_type_id": 2,
+                "amount": 1.0,
+                "fee_related": false,
+                "status": 2,
+                "is_deleted": 0,
+                "created_timestamp": "2025-06-10T09:34:30Z",
+                "last_updated_timestamp": "2025-06-10T09:34:41Z",
+                "user_id": 129,
+                "user_type": {
+                    "id": 2,
+                    "name": "agent"
+                },
+                "amount_type": "Amount",
+                "actor_type": "Specific ID",
+                "post_balance": 1.05821688394E7,
+                "pre_balance": 1.05821678394E7,
+                "debt_balance": 0.0,
+                "voucher_id": null,
+                "voucher_code": null,
+                "error_code": null,
+                "error_message": null,
+                "original_balance_movement_id": null,
+                "rule_id": null
+            },
+            {
+                "order_balance_movement_id": "25061009343024130363473-03",
+                "order_id": "25061009343024130363473",
+                "short_order_id": "57SSBT3L",
+                "remark": "",
+                "action_type": "credit",
+                "actor_user_id": null,
+                "sof_id": 1344620,
+                "sof_type_id": 2,
+                "amount": 0.02,
+                "fee_related": false,
+                "status": 2,
+                "is_deleted": 0,
+                "created_timestamp": "2025-06-10T09:34:30Z",
+                "last_updated_timestamp": "2025-06-10T09:34:41Z",
+                "user_id": 11615,
+                "user_type": {
+                    "id": 2,
+                    "name": "agent"
+                },
+                "amount_type": "Commission to Agent 1",
+                "actor_type": "Payer",
+                "post_balance": 95958.40874,
+                "pre_balance": 95958.38874,
+                "debt_balance": 0.0,
+                "voucher_id": null,
+                "voucher_code": null,
+                "error_code": null,
+                "error_message": null,
+                "original_balance_movement_id": null,
+                "rule_id": null
+            },
+            {
+                "order_balance_movement_id": "25061009343024130363473-04",
+                "order_id": "25061009343024130363473",
+                "short_order_id": "57SSBT3L",
+                "remark": "",
+                "action_type": "credit",
+                "actor_user_id": null,
+                "sof_id": 59,
+                "sof_type_id": 2,
+                "amount": 0.008,
+                "fee_related": false,
+                "status": 2,
+                "is_deleted": 0,
+                "created_timestamp": "2025-06-10T09:34:30Z",
+                "last_updated_timestamp": "2025-06-10T09:34:41Z",
+                "user_id": 197,
+                "user_type": {
+                    "id": 2,
+                    "name": "agent"
+                },
+                "amount_type": "TMN Commission",
+                "actor_type": "Specific ID",
+                "post_balance": 1092.5705,
+                "pre_balance": 1092.5625,
+                "debt_balance": 0.0,
+                "voucher_id": null,
+                "voucher_code": null,
+                "error_code": null,
+                "error_message": null,
+                "original_balance_movement_id": null,
+                "rule_id": null
+            },
+            {
+                "order_balance_movement_id": "25061009343024130363473-05",
+                "order_id": "25061009343024130363473",
+                "short_order_id": "57SSBT3L",
+                "remark": "",
+                "action_type": "debit",
+                "actor_user_id": null,
+                "sof_id": 19,
+                "sof_type_id": 2,
+                "amount": 1.0,
+                "fee_related": false,
+                "status": 2,
+                "is_deleted": 0,
+                "created_timestamp": "2025-06-10T09:34:30Z",
+                "last_updated_timestamp": "2025-06-10T09:34:40Z",
+                "user_id": 132,
+                "user_type": {
+                    "id": 2,
+                    "name": "agent"
+                },
+                "amount_type": "Amount",
+                "actor_type": "Specific ID",
+                "post_balance": 1150236.0,
+                "pre_balance": 1150237.0,
+                "debt_balance": 0.0,
+                "voucher_id": null,
+                "voucher_code": null,
+                "error_code": null,
+                "error_message": null,
+                "original_balance_movement_id": null,
+                "rule_id": null
+            },
+            {
+                "order_balance_movement_id": "25061009343024130363473-06",
+                "order_id": "25061009343024130363473",
+                "short_order_id": "57SSBT3L",
+                "remark": "",
+                "action_type": "debit",
+                "actor_user_id": null,
+                "sof_id": 1344620,
+                "sof_type_id": 2,
+                "amount": 1.0,
+                "fee_related": false,
+                "status": 2,
+                "is_deleted": 0,
+                "created_timestamp": "2025-06-10T09:34:30Z",
+                "last_updated_timestamp": "2025-06-10T09:34:40Z",
+                "user_id": 11615,
+                "user_type": {
+                    "id": 2,
+                    "name": "agent"
+                },
+                "amount_type": "Amount",
+                "actor_type": "Payer",
+                "post_balance": 95957.40874,
+                "pre_balance": 95958.40874,
+                "debt_balance": 0.0,
+                "voucher_id": null,
+                "voucher_code": null,
+                "error_code": null,
+                "error_message": null,
+                "original_balance_movement_id": null,
+                "rule_id": null
+            },
+            {
+                "order_balance_movement_id": "25061009343024130363473-07",
+                "order_id": "25061009343024130363473",
+                "short_order_id": "57SSBT3L",
+                "remark": "",
+                "action_type": "debit",
+                "actor_user_id": null,
+                "sof_id": 12,
+                "sof_type_id": 2,
+                "amount": 0.028,
+                "fee_related": false,
+                "status": 2,
+                "is_deleted": 0,
+                "created_timestamp": "2025-06-10T09:34:30Z",
+                "last_updated_timestamp": "2025-06-10T09:34:40Z",
+                "user_id": 129,
+                "user_type": {
+                    "id": 2,
+                    "name": "agent"
+                },
+                "amount_type": "Fee from Partner",
+                "actor_type": "Specific ID",
+                "post_balance": 1.05821688114E7,
+                "pre_balance": 1.05821688394E7,
+                "debt_balance": 0.0,
+                "voucher_id": null,
+                "voucher_code": null,
+                "error_code": null,
+                "error_message": null,
+                "original_balance_movement_id": null,
+                "rule_id": null
+            }
+        ],
+        "a": 0.98,
+        "b": 0.0,
+        "c": 0.028,
+        "d": 0.02,
+        "e": 0.0,
+        "f": 0.0,
+        "g": 0.0,
+        "h": 0.0,
+        "i": 0.0,
+        "j": 0.0,
+        "k": 0.0,
+        "l": 0.0,
+        "m": 0.008,
+        "n": 0.0,
+        "o": 0.0,
+        "created_timestamp": "2025-06-10T09:34:30Z",
+        "last_updated_timestamp": "2025-06-10T09:34:40Z",
+        "wait_delay_timestamp": null,
+        "spi_call_method": null,
+        "applied_to": null,
+        "discount_code": null,
+        "discount_amount": null,
+        "ref_order_id": null,
+        "settlement_amount": null,
+        "notification_status": null,
+        "created_client_id": null,
+        "executed_client_id": null,
+        "security_ref": null,
+        "security_type_id": null,
+        "trigger_reference": null,
+        "metadata": {
+            "External Transaction ID Initial": "31e1636bc19adbe4"
+        }
+    }
+}'

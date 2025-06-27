@@ -1,0 +1,241 @@
+curl --location 'https://local-spi-staging.private-b-kh1n.ascendmoney.io/local-spi/spi/push/chat-bot/notification' \
+--header 'Content-Type: application/json' \
+--data '{
+    "data": {
+        "product_command": {
+            "name": "Payment",
+            "id": 1
+        },
+        "amount": 10.1,
+        "b": 0.38,
+        "product": {
+            "product_ref1": "01519277",
+            "product_ref2": "327fd9bd1848df2c36e66ab127581f4e1cde40d2813763ec21e45a226b45beef",
+            "product_ref3": "0882550516",
+            "product_ref4": "N/A",
+            "product_ref5": "086823938",
+            "product_name": "domestic-remittance_nt-nt_agent_usd"
+        },
+        "voucher_reference": {
+            "receiver_phone_number": "086823938"
+        },
+        "order_balance_movements": [
+            {
+                "amount": 10.1,
+                "sof_type_id": 2,
+                "actor_type": "Specific ID",
+                "action_type": "credit",
+                "debt_balance": 0,
+                "remark": "",
+                "created_timestamp": 1749202687000,
+                "amount_type": "Amount",
+                "is_deleted": 0,
+                "user_type": {
+                    "name": "agent",
+                    "id": 2
+                },
+                "fee_related": false,
+                "user_id": 200,
+                "short_order_id": "5KB5563W",
+                "last_updated_timestamp": 1749202695000,
+                "sof_id": 53,
+                "order_id": "25060609380743413420167",
+                "order_balance_movement_id": "25060609380743413420167-01",
+                "status": 2
+            },
+            {
+                "amount": 0.13,
+                "sof_type_id": 2,
+                "actor_type": "Specific ID",
+                "action_type": "credit",
+                "debt_balance": 0,
+                "remark": "",
+                "created_timestamp": 1749202687000,
+                "amount_type": "Commission to Agent 2",
+                "is_deleted": 0,
+                "user_type": {
+                    "name": "agent",
+                    "id": 2
+                },
+                "fee_related": false,
+                "user_id": 200,
+                "short_order_id": "5KB5563W",
+                "last_updated_timestamp": 1749202695000,
+                "sof_id": 53,
+                "order_id": "25060609380743413420167",
+                "order_balance_movement_id": "25060609380743413420167-02",
+                "status": 2
+            },
+            {
+                "amount": 0.12,
+                "sof_type_id": 2,
+                "actor_type": "Specific ID",
+                "action_type": "credit",
+                "debt_balance": 0,
+                "remark": "",
+                "created_timestamp": 1749202687000,
+                "amount_type": "TMN Commission",
+                "is_deleted": 0,
+                "user_type": {
+                    "name": "agent",
+                    "id": 2
+                },
+                "fee_related": false,
+                "user_id": 201,
+                "short_order_id": "5KB5563W",
+                "last_updated_timestamp": 1749202695000,
+                "sof_id": 49,
+                "order_id": "25060609380743413420167",
+                "order_balance_movement_id": "25060609380743413420167-03",
+                "status": 2
+            },
+            {
+                "amount": 0.13,
+                "sof_type_id": 2,
+                "actor_type": "Payer",
+                "action_type": "credit",
+                "debt_balance": 0,
+                "post_balance": 1001391.69621,
+                "remark": "",
+                "created_timestamp": 1749202687000,
+                "amount_type": "Commission to Agent 1",
+                "is_deleted": 0,
+                "user_type": {
+                    "name": "agent",
+                    "id": 2
+                },
+                "fee_related": false,
+                "user_id": 11615,
+                "short_order_id": "5KB5563W",
+                "last_updated_timestamp": 1749202695000,
+                "sof_id": 1347522,
+                "pre_balance": 1001391.56621,
+                "order_id": "25060609380743413420167",
+                "order_balance_movement_id": "25060609380743413420167-04",
+                "status": 2
+            },
+            {
+                "amount": 10.1,
+                "sof_type_id": 2,
+                "actor_type": "Payer",
+                "action_type": "debit",
+                "debt_balance": 0,
+                "post_balance": 1001381.59621,
+                "remark": "",
+                "created_timestamp": 1749202687000,
+                "amount_type": "Amount",
+                "is_deleted": 0,
+                "user_type": {
+                    "name": "agent",
+                    "id": 2
+                },
+                "fee_related": false,
+                "user_id": 11615,
+                "short_order_id": "5KB5563W",
+                "last_updated_timestamp": 1749202694000,
+                "sof_id": 1347522,
+                "pre_balance": 1001391.69621,
+                "order_id": "25060609380743413420167",
+                "order_balance_movement_id": "25060609380743413420167-05",
+                "status": 2
+            },
+            {
+                "amount": 0.38,
+                "sof_type_id": 2,
+                "actor_type": "Payer",
+                "action_type": "debit",
+                "debt_balance": 0,
+                "post_balance": 1001381.21621,
+                "remark": "",
+                "created_timestamp": 1749202687000,
+                "amount_type": "Fee from Customer/Agent",
+                "is_deleted": 0,
+                "user_type": {
+                    "name": "agent",
+                    "id": 2
+                },
+                "fee_related": false,
+                "user_id": 11615,
+                "short_order_id": "5KB5563W",
+                "last_updated_timestamp": 1749202694000,
+                "sof_id": 1347522,
+                "pre_balance": 1001381.59621,
+                "order_id": "25060609380743413420167",
+                "order_balance_movement_id": "25060609380743413420167-06",
+                "status": 2
+            }
+        ],
+        "additional_references": [
+            {
+                "value": "2",
+                "key": "channelId"
+            },
+            {
+                "value": "N/A",
+                "key": "referenceNumber"
+            },
+            {
+                "value": "N/A",
+                "key": "externalReference"
+            },
+            {
+                "value": "{\"core-app-version\":\"2.2.0-64-hotfix\",\"customerPhone\":\"0882550516\",\"receiverPhone\":\"086823938\",\"iBU\":false,\"app-name\":\"remittance-staging\"}",
+                "key": "info"
+            },
+            {
+                "value": "NT-NT",
+                "key": "transferType"
+            },
+            {
+                "value": "agent-11615",
+                "key": "senderCorrelationId"
+            },
+            {
+                "value": "agent-200",
+                "key": "receiverCorrelationId"
+            },
+            {
+                "value": "0882550516",
+                "key": "senderInfoId"
+            },
+            {
+                "value": "086823938",
+                "key": "receiverInfoId"
+            },
+            {
+                "value": "TEST BRO",
+                "key": "senderName"
+            }
+        ],
+        "payer_user": {
+            "ref_value": "****",
+            "sof_type_id": 2,
+            "sof_id": 1347522,
+            "id": 11615,
+            "type": "agent",
+            "ref_type": "access token"
+        },
+        "last_updated_timestamp": 1749202695000,
+        "currency": "USD",
+        "payee_user": {
+            "sof_type_id": 2,
+            "sof_id": 53,
+            "id": 200,
+            "type": "agent"
+        },
+        "order_id": "25060609380743413420167",
+        "product_service": {
+            "name": "domestic-remittance_nt-nt_agent_usd",
+            "display_name_local": "ផ្ទេរប្រាក់",
+            "currency": "USD",
+            "id": 60,
+            "display_name": "Money Transfer"
+        },
+        "initiator_user": {
+            "sof_type_id": 2,
+            "sof_id": 1347522,
+            "id": 11615,
+            "type": "agent"
+        }
+    }
+}'
