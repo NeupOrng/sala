@@ -7,6 +7,7 @@ const showAlert = ref(false);
 <template>
   <ClientOnly>
     <h1>Index page</h1>
+    <DonutChart />
     {{ studentStore.students }}
   </ClientOnly>
 </template>

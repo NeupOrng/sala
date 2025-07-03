@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { Student, type IStudent } from "./model/student";
 import { useNotification } from "@/composables/use-notification";
 
-export const useStudentStore = defineStore("students", {
+export const useStudentStore = defineStore("studentStore", {
     state: () => ({
         students: [] as Student[],
         schoolId: "",

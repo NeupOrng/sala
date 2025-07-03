@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import type { ISchool } from "./model/school";
 
-export const useSchoolStore = defineStore("schools", {
+export const useSchoolStore = defineStore("schoolStore", {
   state: () => ({
     school: {
       id: "",
