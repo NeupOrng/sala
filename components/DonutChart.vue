@@ -13,12 +13,12 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 
 // Example data — you can make this a prop later
 const chartData = {
-  labels: ['Red', 'Blue', 'Yellow'],
+  labels: ['Male', 'Female'],
   datasets: [
     {
       label: 'Votes',
-      data: [300, 50, 100],
-      backgroundColor: ['#ef4444', '#3b82f6', '#facc15'],
+      data: [300, 50],
+      backgroundColor: ['#ef4444', '#3b82f6'],
       hoverOffset: 10
     }
   ]

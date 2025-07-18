@@ -1,13 +1,17 @@
 <script setup lang="ts">
+import { useSchoolStore } from "~/store/school";
 import { useStudentStore } from "~/store/student";
 
 const studentStore = useStudentStore();
+const schoolStore = useSchoolStore();
 const showAlert = ref(false);
+
+onMounted(async () => {
+    await schoolStore.fetchOnLoad();
+})
 </script>
 <template>
   <ClientOnly>
-    <h1>Index page</h1>
-    <DonutChart />
-    {{ studentStore.students }}
+    <AppDashboardStudentGender :gender="schoolStore.genderCount" />
   </ClientOnly>
 </template>
