@@ -8,7 +8,6 @@ import redis from "~/server/utils/redis";
 import { RedisKey } from "~/server/dto/constant/redis-key";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret";
-const SALT = process.env.SALT || 10;
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
@@ -30,7 +29,7 @@ export default defineEventHandler(async (event) => {
     );
 
     // Set as HTTP-only cookie
-    setCookie(event, "auth_token", token, {
+    setCookie(event, "token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         path: "/",
@@ -38,7 +37,8 @@ export default defineEventHandler(async (event) => {
         maxAge: 60 * 60 * 24 * 7, // 7 days
     });
 
-    redis.set(`${RedisKey.authToken}:${token}`, JSON.stringify(user), "EX", 60 * 60 *24 * 7)
+    const { passwordHash, ...safeUser } = user;
+    redis.set(`${RedisKey.authToken}:${token}`, JSON.stringify(safeUser), "EX", 60 * 60 *24 * 7)
     redis.set(`${RedisKey.authUser}:${user.id}`, token, "EX", 60 * 60 *24 * 7)
 
     return { success: true };

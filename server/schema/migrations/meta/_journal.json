@@ -22,6 +22,13 @@
       "when": 1748838695332,
       "tag": "0002_stiff_silver_centurion",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1754291565719,
+      "tag": "0003_long_scorpion",
+      "breakpoints": true
     }
   ]
 }
