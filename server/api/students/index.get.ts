@@ -8,7 +8,6 @@ import Student from "~/pages/student.vue";
 
 export default defineEventHandler(async (event) => {
   const schoolId = getHeader(event, "school_id");
-  console.log("event get", schoolId);
   if (schoolId === undefined) {
    throw new BadRequestException("Missing school_id header");
   }

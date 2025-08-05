@@ -58,7 +58,6 @@ const handleOpen = () => {
 };
 
 const handleSave = async () => {
-    console.log("!save");
     const student = await props.onCreateStudent(new Student(studentModel));
     if (student) {
         studentModel.id = student.id;

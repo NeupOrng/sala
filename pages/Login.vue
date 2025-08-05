@@ -7,7 +7,7 @@ import { useAuthStore } from "~/store/auth";
 const { addNotification } = useNotification();
 const authStore = useAuthStore();
 const loginModel:ILoginModel = {
-    email: "",
+    username: "",
     password: "",
 };
 
@@ -20,19 +20,24 @@ const formContext = loginModelObj.getForm();
 
 const onSubmit = formContext.handleSubmit(async (values) => {
     try {
-        // const success = await authStore.login(values); // assuming you have a login action
-        // if (success) {
-        //     addNotification("Login successful!", "success");
-        // } else {
-        //     addNotification("Invalid credentials", "error");
-        // }
-        console.log(values)
-        addNotification({
-            title: "Login Success",
-            description: "Login success successfully",
-            type: "default",
-            duration: 4000,
-        })
+        const success = await authStore.login(values); // assuming you have a login action
+        if (success) {
+            addNotification({
+                title: "Login Success",
+                description: "Login success successfully",
+                type: "default",
+                duration: 4000,
+            })
+            const router = useRouter();
+            router.push('/');
+        } else {
+            addNotification({
+                title: "Login Success",
+                description: "Login success successfully",
+                type: "destructive",
+                duration: 4000,
+            })
+        }
     } catch (err) {
         addNotification({
             title: "Login Success",
@@ -58,11 +63,11 @@ const onSubmit = formContext.handleSubmit(async (values) => {
                     </h2>
 
                     <!-- Email -->
-                    <FormField name="email"" v-slot="{ componentField }">
+                    <FormField name="username" v-slot="{ componentField }">
                         <FormItem class="mb-4">
-                            <FormLabel>Email</FormLabel>
+                            <FormLabel>Username</FormLabel>
                             <FormControl>
-                                <Input type="email" placeholder="you@example.com" v-bind="componentField" />
+                                <Input type="text" placeholder="username" v-bind="componentField" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

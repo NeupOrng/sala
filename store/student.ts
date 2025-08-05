@@ -33,8 +33,6 @@ export const useStudentStore = defineStore("studentStore", {
                     console.error("Failed to fetch students:", error.value);
                     return;
                 }
-
-                console.log("response", data.value);
                 this.students = (data.value || []).map(
                     (student: any) => new Student(student)
                 );
@@ -60,7 +58,6 @@ export const useStudentStore = defineStore("studentStore", {
                 const data = await res.json();
                 // Update local students array
                 const idx = this.students.findIndex((s) => s.id === student.id);
-                console.log("idx", idx);
                 if (idx !== -1) {
                     this.students[idx] = new Student(data.student);
                 }
@@ -85,7 +82,6 @@ export const useStudentStore = defineStore("studentStore", {
             console.log("delete", student);
         },
         async createStudent(student: Student): Promise<Student | null> {
-            console.log("created", student);
             const { addNotification } = useNotification();
             try {
                 const res = await fetch("/api/students", {

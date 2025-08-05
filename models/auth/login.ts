@@ -3,22 +3,22 @@ import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 
 export interface ILoginModel {
-    email: string,
+    username: string,
     password: string
 }
 
 export class LoginModel implements ILoginModel {
-    email: string;
+    username: string;
     password: string;
 
     constructor(json: ILoginModel) {
-        this.email = json.email;
+        this.username = json.username;
         this.password = json.password;
     }
 
     getForm(): FormContext<ILoginModel> {
         const formSchema = toTypedSchema(z.object({
-            email: z.string().email('Please enter a valid email address'),
+            username: z.string(),
             password: z.string()
                 .min(8, 'Password must be at least 8 characters long')
                 .regex(
@@ -29,7 +29,7 @@ export class LoginModel implements ILoginModel {
         return useForm<ILoginModel>({
             validationSchema: formSchema,
             initialValues: {
-                email: this.email || '',
+                username: this.username || '',
                 password: this.password || ''
             }
         });

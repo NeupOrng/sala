@@ -11,7 +11,6 @@ export default defineEventHandler(async (event) => {
 
   // 2. Map to DTO
   const request = new CreateStudentRequest(body);
-  console.log("create student request", request);
 
   // Optional: Validate school exists
   const school = await db
