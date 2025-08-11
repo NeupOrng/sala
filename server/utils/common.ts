@@ -8,7 +8,7 @@ export function getHeader(
     return typeof headerValue === "string" ? headerValue : undefined;
 }
 
-function getHeaderValue(
+export function getHeaderValue(
     event: H3Event,
     name: string
 ): string | string[] | undefined {

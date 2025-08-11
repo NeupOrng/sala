@@ -23,17 +23,17 @@ export const useAuthStore = defineStore("authStore", {
                 console.log("check authorized", response);
                 // Check if the response body indicates an authorization failure
                 if (
-                    response.message &&
-                    response.message.includes("Unauthorized")
+                    response.statusMessage &&
+                    response.statusMessage.includes("Unauthorized")
                 ) {
                     this.isAuthorized = false;
                     this.username = "";
                     this.role = "";
                 } else {
                     // Assuming the response has the structure: { user: { isActive, isVerified } }
-                    const user = response.user;
-                    this.isAuthorized = user.isActive && user.isVerified;
-                    this.username = user.username;
+                    const user = response.data?.user as Record<string, any>;
+                    this.isAuthorized = user ? true : false;
+                    this.username = user?.username ?? "";
                     this.role = user.role;
                 }
 
@@ -60,7 +60,7 @@ export const useAuthStore = defineStore("authStore", {
                     credentials: "include",
                 });
                 console.log('login', response)
-                if (response.success) {
+                if (response.statusCode === 200) {
                     this.isAuthorized = true;
                     this.username = request.username;
                     this.role = "user";

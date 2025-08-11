@@ -1,8 +1,9 @@
 import { hash } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Users } from "~/server/schema/user";
-import { BadRequestException } from "~/server/dto/response/exception/bad-request";
 import { RedisKey } from "~/server/dto/constant/redis-key";
+import { badRequest } from "~/server/utils/response/error-helpers";
+import { created } from "~/server/utils/response/success-helper";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret";
 const SALT = process.env.SALT || 10;
@@ -11,9 +12,9 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     const { username, password, role } = body;
     if (!username || !password) {
-        throw new BadRequestException("Username and password are required");
+        throw badRequest("Username and password are required");
     } else if (!role) {
-        throw new BadRequestException("Role is required");
+        throw badRequest("Role is required");
     }
     const hashedPassword = await hash(password, Number(SALT));
 
@@ -47,5 +48,5 @@ export default defineEventHandler(async (event) => {
     redis.set(`${RedisKey.authToken}:${token}`, JSON.stringify(safeUser), "EX", 60 * 60 *24 * 7)
     redis.set(`${RedisKey.authUser}:${newUserId}`, token, "EX", 60 * 60 *24 * 7)
 
-    return { success: true };
+    return created({})
 });

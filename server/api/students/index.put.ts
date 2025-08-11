@@ -2,20 +2,20 @@ import { db } from "~/server/utils/db";
 import { Students } from "~/server/schema/students";
 import { eq } from "drizzle-orm";
 import { readBody } from "h3";
-import { BadRequestException } from "~/server/dto/response/exception/bad-request";
-import { NotFoundException } from "~/server/dto/response/exception/not-found";
+import { badRequest } from "~/server/utils/response/error-helpers";
+import { created } from "~/server/utils/response/success-helper";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { id, ...fields } = body;
   if (!id) {
-    throw new BadRequestException("Missing student id");
+    throw badRequest("Student ID is required");
   }
 
   // Check if student exists
   const existing = await db.select().from(Students).where(eq(Students.id, id)).limit(1);
   if (!existing.length) {
-    throw new NotFoundException("Student not found");
+    throw badRequest("Student not found");
   }
 
   // Only update fields that are present in the request
@@ -33,8 +33,9 @@ export default defineEventHandler(async (event) => {
     .where(eq(Students.id, id))
     .returning();
 
-  return {
-    message: "Student updated successfully",
-    student: updated,
-  };
+  return created(
+    {
+      student: updated,
+    }
+  )
 });

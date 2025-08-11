@@ -3,15 +3,16 @@ import { Schools } from "~/server/schema/schools";
 import { Students } from "~/server/schema/students";
 import { and, eq } from "drizzle-orm";
 import { getHeader } from "~/server/utils/common";
-import { BadRequestException } from "~/server/dto/response/exception/bad-request";
 import Student from "~/pages/student.vue";
+import { badRequest } from "~/server/utils/response/error-helpers";
+import { ok } from "~/server/utils/response/success-helper";
 
 export default defineEventHandler(async (event) => {
   const schoolId = getHeader(event, "school_id");
   if (schoolId === undefined) {
-   throw new BadRequestException("Missing school_id header");
+    throw badRequest("Missing school_id header");
   }
-  return await db
+  const students = await db
     .select({
       id: Students.id,
       firstName: Students.firstName,
@@ -39,4 +40,12 @@ export default defineEventHandler(async (event) => {
             eq(Students.schoolId, schoolId)
         )
     );
+
+    return ok({
+        students: students.map(student => ({
+            ...student,
+            fullName: `${student.firstName} ${student.middleName || ""} ${student.lastName}`,
+            schoolName: student.school.name,
+        }))
+    })
 });
