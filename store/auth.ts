@@ -17,7 +17,7 @@ export const useAuthStore = defineStore("authStore", {
             }
             try {
                 // Fetch the user profile to check authorization status
-                const response = await $fetch("/api/users/profile", {
+                const response = await $fetch("/api/heartbeat", {
                     credentials: "include",
                 });
                 console.log("check authorized", response);

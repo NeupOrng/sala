@@ -28,8 +28,7 @@ const onSubmit = formContext.handleSubmit(async (values) => {
                 type: "default",
                 duration: 4000,
             })
-            const router = useRouter();
-            router.push('/');
+            navigateTo('/');
         } else {
             addNotification({
                 title: "Login Success",

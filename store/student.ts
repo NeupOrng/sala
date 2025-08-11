@@ -33,7 +33,7 @@ export const useStudentStore = defineStore("studentStore", {
                     console.error("Failed to fetch students:", error.value);
                     return;
                 }
-                this.students = (data.value || []).map(
+                this.students = (data?.value?.data?.students || []).map(
                     (student: any) => new Student(student)
                 );
             } catch (err) {
