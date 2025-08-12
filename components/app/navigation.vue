@@ -15,9 +15,9 @@
           :active-class="`bg-blue-200`"
           >Student</NuxtLink
         >
-        <a href="#" class="px-4 py-2 rounded hover:bg-gray-100">Profile</a>
+        <!-- <a href="#" class="px-4 py-2 rounded hover:bg-gray-100">Profile</a>
         <a href="#" class="px-4 py-2 rounded hover:bg-gray-100">Settings</a>
-        <a href="#" class="px-4 py-2 rounded hover:bg-gray-100">Logout</a>
+        <a href="#" class="px-4 py-2 rounded hover:bg-gray-100">Logout</a> -->
       </nav>
     </aside>
   </ClientOnly>
