@@ -2,19 +2,27 @@ import { RedisKey } from "../dto/constant/redis-key";
 
 export default defineEventHandler(async (event) => {
     try {
+        const path = event.path;
+        console.log("[Auth Middleware] url :", event.path);
         const token = getCookie(event, "token");
-        if (token) {
-            const userJson = await redis.get(`${RedisKey.authToken}:${token}`);
-            if (userJson) {
-                event.context.user = JSON.parse(userJson);
+        if (path.startsWith("/api/protected") && token) {
+            if (token) {
+                const userJson = await redis.get(
+                    `${RedisKey.authToken}:${token}`
+                );
+                if (userJson) {
+                    event.context.user = JSON.parse(userJson);
+                } else {
+                    console.error("[Auth Middleware] Token not found in Redis");
+                    throw forbidden("Invalid or expired token");
+                }
             } else {
-                event.context.user = undefined;
+                console.error("[Auth Middleware] Missing auth token cookie");
+                throw forbidden("Missing auth token cookie");
             }
-        } else {
-            event.context.user = undefined;
         }
     } catch (error) {
-        event.context.user = null;
         console.error("[Auth Middleware] Error during user lookup:", error);
+        throw error;
     }
 });

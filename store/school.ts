@@ -17,11 +17,10 @@ export const useSchoolStore = defineStore("schoolStore", {
         },
 
         async fetchOnLoad() {
-            const onloadResponse = await $fetch('/api/on-load', {
-                headers: {
-                    school_id: this.school.id,
-                },
-            });
+            const { $apiFetch } = useNuxtApp();
+            const onloadResponse = await $apiFetch("/api/protected/on-load", {
+                credentials: "include",
+            })
             if(onloadResponse) {
                 this.genderCount = onloadResponse.genderCount
             }
