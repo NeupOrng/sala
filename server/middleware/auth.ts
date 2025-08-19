@@ -1,11 +1,12 @@
 import { RedisKey } from "../dto/constant/redis-key";
+import redis from "~/server/utils/redis";
 
 export default defineEventHandler(async (event) => {
     try {
         const path = event.path;
         console.log("[Auth Middleware] url :", event.path);
-        const token = getCookie(event, "token");
-        if (path.startsWith("/api/protected") && token) {
+        if (path.startsWith("/api/protected")) {
+            const token = getCookie(event, "token");
             if (token) {
                 const userJson = await redis.get(
                     `${RedisKey.authToken}:${token}`

@@ -9,11 +9,14 @@ export const useSchoolStore = defineStore("schoolStore", {
             name: "",
             shortName: "",
         } as ISchool,
-        genderCount: [] as IGenderCount[]
+        genderCount: [] as IGenderCount[],
     }),
     actions: {
         async fetchSchools() {
-            this.school = (await $fetch("/api/schools")) as unknown as ISchool;
+            const { $apiFetch } = useNuxtApp();
+            this.school = (await $apiFetch("/api/schools", {
+                credentials: "include",
+            })) as unknown as ISchool;
         },
 
         async fetchOnLoad() {
@@ -26,18 +29,7 @@ export const useSchoolStore = defineStore("schoolStore", {
             }
         },
         async initialize() {
-            const { addNotification } = useNotification();
-            this.school = {
-                id: "5b8ad78c-3a3c-402b-9739-237d41b7ec7a",
-                name: "DataU Academy",
-                shortName: "DAU",
-            };
-            //   addNotification({
-            //     title: 'Noted!',
-            //     description: 'Fetch School',
-            //     type: 'default',
-            //     duration: 4000,
-            //   })
+            await this.fetchOnLoad();
         },
     },
 });
