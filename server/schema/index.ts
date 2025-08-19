@@ -5,9 +5,11 @@ import { Scores } from './score';
 import { Classes } from './class';
 import { Schools } from './schools';
 import { Assignments } from './assignment';
+import { Guardians } from './guardians';
 
 export { Schools } from './schools';
 export { Students } from './students';
+export { Guardians } from './guardians';
 export { StatusEnum } from './status';
 export { GenderEnum } from './gender';
 export { Users } from './user'
@@ -56,5 +58,16 @@ export const scoresRelations = relations(Scores, ({ one }) => ({
   assignment: one(Assignments, {
     fields: [Scores.assignmentId],
     references: [Assignments.id],
+  }),
+}));
+
+export const StudentsRelations = relations(Students, ({ many }) => ({
+  guardians: many(Guardians),
+}));
+
+export const GuardiansRelations = relations(Guardians, ({ one }) => ({
+  student: one(Students, {
+    fields: [Guardians.studentId],
+    references: [Students.id],
   }),
 }));

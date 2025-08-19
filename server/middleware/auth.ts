@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
                 );
                 if (userJson) {
                     event.context.user = JSON.parse(userJson);
+                    event.context.user.schoolId = "9689e690-36fd-49b3-a0dc-6f5285ff67e1";
                 } else {
                     console.error("[Auth Middleware] Token not found in Redis");
                     throw forbidden("Invalid or expired token");

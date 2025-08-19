@@ -22,7 +22,7 @@ export const useSchoolStore = defineStore("schoolStore", {
                 credentials: "include",
             })
             if(onloadResponse) {
-                this.genderCount = onloadResponse.genderCount
+                this.genderCount = onloadResponse.data.genderCount
             }
         },
         async initialize() {

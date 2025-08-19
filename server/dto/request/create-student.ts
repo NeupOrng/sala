@@ -8,9 +8,11 @@ export interface ICreateStudentRequest {
   nationality: string;
   dateOfBirth: Date;
   phoneNumber: string;
-  guardianName: string;
-  guardianPhone: string;
-  guardianEmail: string;
+  guardian: Array<{
+    name: string;
+    phone: string;
+    email: string;
+  }>;
   relationshipToStudent: string;
   academicYear: string;
   photoUrl: string;
@@ -26,9 +28,11 @@ export class CreateStudentRequest implements ICreateStudentRequest {
   nationality: string;
   dateOfBirth: Date;
   phoneNumber: string;
-  guardianName: string;
-  guardianPhone: string;
-  guardianEmail: string;
+  guardian: Array<{
+    name: string;
+    phone: string;
+    email: string;
+  }>;
   relationshipToStudent: string;
   academicYear: string;
   photoUrl: string;
@@ -42,11 +46,13 @@ export class CreateStudentRequest implements ICreateStudentRequest {
     this.gender = String(json?.gender ?? "");
     this.email = String(json?.email ?? "");
     this.nationality = String(json?.nationality ?? "");
-    this.dateOfBirth = new Date(json.dateOfBirth)
+    this.dateOfBirth = new Date(json.dateOfBirth);
     this.phoneNumber = String(json?.phoneNumber ?? "");
-    this.guardianName = String(json?.guardianName ?? "");
-    this.guardianPhone = String(json?.guardianPhone ?? "");
-    this.guardianEmail = String(json?.guardianEmail ?? "");
+    this.guardian = json?.guardian?.map((g: any) => ({
+      name: String(g.name ?? ""),
+      phone: String(g.phone ?? ""),
+      email: String(g.email ?? "")
+    })) || [];
     this.relationshipToStudent = String(json?.relationshipToStudent ?? "");
     this.academicYear = String(json?.academicYear ?? "");
     this.photoUrl = json?.photoUrl ?? "";
