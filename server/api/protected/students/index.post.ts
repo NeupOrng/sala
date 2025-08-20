@@ -30,46 +30,43 @@ export default defineEventHandler(async (event) => {
     };
   }
 
-  const newStudentId = await generatedStudentId();
+  const newStudentId = await generatedStudentId(school.shortName ?? "SALA");
 
+  const newStudentDto: typeof Students.$inferInsert = {
+    schoolId: user.schoolId,
+    firstName: request.firstName,
+    middleName: request.middleName,
+    lastName: request.lastName,
+    gender: request.gender as "male" | "female" | "other",
+    email: request.email,
+    nationality: request.nationality,
+    studentIdNumber: newStudentId,
+    dateOfBirth: request.dateOfBirth instanceof Date ? request.dateOfBirth.toISOString() : request.dateOfBirth,
+    phoneNumber: request.phoneNumber,
+    academicYear: request.academicYear,
+    status: "active",
+    photoUrl: request.photoUrl,
+  }
   const [newStudent] = await db
     .insert(Students)
-    .values({
-    // @ts-ignore
-      schoolId: request.schoolId,
-      firstName: request.firstName,
-      middleName: request.middleName,
-      lastName: request.lastName,
-      gender: request.gender,
-      email: request.email,
-      nationality: request.nationality,
-      studentIdNumber: generatedStudentId,
-      dateOfBirth: request.dateOfBirth,
-      phoneNumber: request.phoneNumber,
-      relationshipToStudent: request.relationshipToStudent,
-      academicYear: request.academicYear,
-      status: "active",
-      photoUrl: request.photoUrl,
-    })
+    .values(newStudentDto)
     .returning();
 
-    console.log("New student created:", newStudent);
-
   // 4. Return created student
-  return ok({
+  return created({
     student: newStudent,
   });
 });
 
 
-const generatedStudentId = async () => {
-    const newGeneratedStudentId = studentUtil().generateStudentId();
+const generatedStudentId = async (schoolShortName: string) => {
+    const newGeneratedStudentId = `${schoolShortName}${studentUtil().generateStudentId()}`;
     const student = await db
         .select()
         .from(Students)
         .where(eq(Students.studentIdNumber, newGeneratedStudentId));
     if (student.length > 0) {
-        return generatedStudentId(); // Recursively generate a new ID if it already exists
+        return generatedStudentId(schoolShortName); // Recursively generate a new ID if it already exists
     }
     return newGeneratedStudentId; // Return the unique student ID
 }

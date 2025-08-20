@@ -5,35 +5,19 @@ import { useNotification } from "@/composables/use-notification";
 export const useStudentStore = defineStore("studentStore", {
     state: () => ({
         students: [] as Student[],
-        schoolId: "",
     }),
     actions: {
-        async initialize(schoolId: string) {
-            this.schoolId = schoolId;
-            await this.fetchStudentBySchoolid(schoolId);
-        },
-        async callFetchStudent(path: string, init?: RequestInit) {
-            return await fetch(path, {
-                headers: {
-                    school_id: this.schoolId,
-                },
-                ...init,
-            });
+        async initialize() {
+            await this.fetchStudents();
         },
 
-        async fetchStudentBySchoolid(schoolId: string) {
+        async fetchStudents() {
+            const { $apiFetch } = useNuxtApp();
             try {
-                const { data, error } = await useFetch("/api/students", {
-                    headers: {
-                        school_id: schoolId,
-                    },
+                const { data } = await $apiFetch("/api/protected/students", {
+                    credentials: "include",
                 });
-
-                if (error.value) {
-                    console.error("Failed to fetch students:", error.value);
-                    return;
-                }
-                this.students = (data?.value?.data?.students || []).map(
+                this.students = (data?.students || []).map(
                     (student: any) => new Student(student)
                 );
             } catch (err) {
@@ -43,29 +27,30 @@ export const useStudentStore = defineStore("studentStore", {
 
         async editStudent(student: Student) {
             const { addNotification } = useNotification();
+            const { $apiFetch } = useNuxtApp();
             try {
-                const res = await fetch("/api/students", {
+                const res = await $apiFetch("/api/protected/students", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
+                    credentials: "include",
                     body: student.toRequestString,
                 });
-                if (!res.ok) {
-                    const err = await res.json();
+                if (res.statusCode !== 200) {
                     throw new Error(
-                        err.statusMessage || "Failed to update student"
+                        res.statusMessage || "Failed to update student"
                     );
                 }
-                const data = await res.json();
+                const data = res.data;
                 // Update local students array
                 const idx = this.students.findIndex((s) => s.id === student.id);
                 if (idx !== -1) {
-                    this.students[idx] = new Student(data.student);
+                    this.students[idx] = new Student(data?.student);
                 }
                 console.log(this.students[idx]);
 
                 addNotification({
                     title: "Student Updated",
-                    description: data.message || "Student updated successfully",
+                    description: res.statusMessage || "Student updated successfully",
                     type: "default",
                     duration: 4000,
                 });
@@ -83,20 +68,21 @@ export const useStudentStore = defineStore("studentStore", {
         },
         async createStudent(student: Student): Promise<Student | null> {
             const { addNotification } = useNotification();
+            const { $apiFetch } = useNuxtApp();
             try {
-                const res = await fetch("/api/students", {
+                const res = await $apiFetch("/api/protected/students", {
                     method: "POST",
+                    credentials: "include",
                     headers: { "Content-Type": "application/json" },
                     body: student.toRequestString,
                 });
-                if (!res.ok) {
-                    const err = await res.json();
+                if (res.statusCode !== 201) {
                     throw new Error(
-                        err.statusMessage || "Failed to update student"
+                        res.statusMessage || "Failed to create student"
                     );
                 }
-                const data = await res.json();
-                return new Student(data.student);
+                const data = res.data;
+                return new Student(data?.student);
             } catch (err: any) {
                 addNotification({
                     title: "Update Error",

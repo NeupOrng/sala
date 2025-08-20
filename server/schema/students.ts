@@ -20,7 +20,7 @@ export const Students = pgTable("students", {
   dateOfBirth: date("date_of_birth").notNull(),
   email: varchar("email", { length: 255 }),
   phoneNumber: varchar("phone_number", { length: 20 }),
-  academicYear: varchar("academic_year", { length: 24 }),
+  academicYear: varchar("academic_year", { length: 255 }),
   isDeleted: boolean("is_deleted").notNull().default(false),
   photoUrl: varchar("photo_url", { length: 1024 }),
 }, (student) => ({

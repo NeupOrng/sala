@@ -1,7 +1,7 @@
 import { and, count, eq } from "drizzle-orm";
-import { get } from "lodash";
 import { Schools, Students } from "~/server/schema";
 import { db } from "~/server/utils/db";
+import _ from "lodash";
 
 export default defineEventHandler(async (event) => {
     const user = event.context.user;
@@ -44,5 +44,5 @@ const getSchoolDetails = async (schoolId: string) => {
         }).from(Schools)
         .where(eq(Schools.id, schoolId))
         .limit(1)
-        .then((result) => get(result, "[0]", {}));
+        .then((result) => _.get(result, "[0]", {}));
 }
