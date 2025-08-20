@@ -8,19 +8,20 @@ import studentUtil from "~/server/utils/student";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
+  const user = event.context.user;
 
   // 2. Map to DTO
   const request = new CreateStudentRequest(body);
 
   // Optional: Validate school exists
-  const school = await db
+  const [school] = await db
     .select({
       id: Schools.id,
       name: Schools.name,
       shortName: Schools.shortName,
     })
     .from(Schools)
-    .where(eq(Schools.id, request.schoolId))
+    .where(eq(Schools.id, user.schoolId))
     .limit(1);
   if (!school) {
     return {
@@ -29,9 +30,7 @@ export default defineEventHandler(async (event) => {
     };
   }
 
-  const generatedStudentId = `${
-    school[0].shortName
-  }${studentUtil().generateStudentId()}`;
+  const newStudentId = await generatedStudentId();
 
   const [newStudent] = await db
     .insert(Students)
@@ -47,9 +46,6 @@ export default defineEventHandler(async (event) => {
       studentIdNumber: generatedStudentId,
       dateOfBirth: request.dateOfBirth,
       phoneNumber: request.phoneNumber,
-      guardianName: request.guardianName,
-      guardianPhone: request.guardianPhone,
-      guardianEmail: request.guardianEmail,
       relationshipToStudent: request.relationshipToStudent,
       academicYear: request.academicYear,
       status: "active",
@@ -57,9 +53,23 @@ export default defineEventHandler(async (event) => {
     })
     .returning();
 
+    console.log("New student created:", newStudent);
+
   // 4. Return created student
-  return {
-    message: "Student created successfully",
+  return ok({
     student: newStudent,
-  };
+  });
 });
+
+
+const generatedStudentId = async () => {
+    const newGeneratedStudentId = studentUtil().generateStudentId();
+    const student = await db
+        .select()
+        .from(Students)
+        .where(eq(Students.studentIdNumber, newGeneratedStudentId));
+    if (student.length > 0) {
+        return generatedStudentId(); // Recursively generate a new ID if it already exists
+    }
+    return newGeneratedStudentId; // Return the unique student ID
+}
