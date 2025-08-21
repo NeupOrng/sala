@@ -8,7 +8,7 @@ const studentStore = useStudentStore();
 
 onMounted(async () => {
     await schoolStore.initialize();
-    await studentStore.initialize(schoolStore.school.id);
+    await studentStore.initialize();
 })
 
 </script>

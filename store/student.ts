@@ -1,14 +1,17 @@
 import { defineStore } from "pinia";
 import { Student, type IStudent } from "./model/student";
 import { useNotification } from "@/composables/use-notification";
+import { ClassDto } from "./model/class";
 
 export const useStudentStore = defineStore("studentStore", {
     state: () => ({
         students: [] as Student[],
+        classes: [] as ClassDto[],
     }),
     actions: {
         async initialize() {
             await this.fetchStudents();
+            await this.fetchClasses();
         },
 
         async fetchStudents() {
@@ -132,6 +135,28 @@ export const useStudentStore = defineStore("studentStore", {
                 throw err;
             }
         },
+        async fetchClasses() {
+            const { $apiFetch } = useNuxtApp();
+            try {
+                const response = await $apiFetch("/api/protected/classes", {
+                    credentials: "include",
+                });
+                if(response.statusCode !== 200) {
+                    throw new Error(response.statusMessage || "Failed to fetch classes");
+                }
+                this.classes = response.data?.classes.map((cls: any) =>  new ClassDto(cls)) || [];
+            } catch (err) {
+                console.error("Unexpected error fetching classes:", err);
+                const { addNotification } = useNotification();
+                addNotification({
+                    title: "Fetch Classes Error",
+                    description: (err as Error).message || "Unknown error",
+                    type: "destructive",
+                    duration: 4000,
+                });
+            }
+        },
+
         async createClass() {
             console.log("Creating class with data:");
         }
