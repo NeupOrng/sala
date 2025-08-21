@@ -18,15 +18,22 @@ export const useSchoolStore = defineStore("schoolStore", {
                 credentials: "include",
             })) as unknown as ISchool;
         },
-
+        
         async fetchOnLoad() {
             const { $apiFetch } = useNuxtApp();
             const onloadResponse = await $apiFetch("/api/protected/on-load", {
                 credentials: "include",
             })
-            if(onloadResponse) {
-                this.genderCount = onloadResponse.data.genderCount
+            if(onloadResponse.statusCode !== 200) {
+                const { addNotification } = useNotification();
+                addNotification({
+                    title: "Error",
+                    description: onloadResponse.statusMessage || "Failed to load school data",
+                    type: "destructive",
+                    duration: 4000,
+                });
             }
+            this.genderCount = onloadResponse.data?.genderCount || [];
         },
         async initialize() {
             await this.fetchOnLoad();

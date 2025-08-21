@@ -1,5 +1,5 @@
 import { and, count, eq } from "drizzle-orm";
-import { Schools, Students } from "~/server/schema";
+import { GenderEnum, Schools, Students } from "~/server/schema";
 import { db } from "~/server/utils/db";
 import _ from "lodash";
 
@@ -19,7 +19,13 @@ export default defineEventHandler(async (event) => {
     const response = {} as any;
     response.genderCount = await getStudentCountGroupByGender(schoolId);
     response.school = await getSchoolDetails(schoolId);
-    return ok(response);
+    return ok<{
+        genderCount: {
+            gender: string,
+            count: number;
+        }[],
+        school: typeof Schools.$inferSelect
+    }>(response);
 });
 
 const getStudentCountGroupByGender = async (schoolId: string) => {

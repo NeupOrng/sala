@@ -132,5 +132,8 @@ export const useStudentStore = defineStore("studentStore", {
                 throw err;
             }
         },
+        async createClass() {
+            console.log("Creating class with data:");
+        }
     },
 });

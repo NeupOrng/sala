@@ -10,6 +10,7 @@ import { Schools } from "./schools";
 export const Classes = pgTable("classes", {
   id: uuid("id").primaryKey().defaultRandom(),
   schoolId: uuid("school_id").references(() => Schools.id).notNull(),
+  teacherId: uuid("teacher_id").notNull(),
   name: varchar("name", { length: 100 }).notNull(),
   description: text("description"),
   startDate: timestamp("start_date").notNull(),
