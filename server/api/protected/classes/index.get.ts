@@ -1,4 +1,4 @@
-import { Classes, Enrollments, Students } from "~/server/schema";
+import { Classes, Enrollments, Students, ClassAssignments, Teachers } from "~/server/schema";
 import { and, eq } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
@@ -17,27 +17,32 @@ export default defineEventHandler(async (event) => {
 
     const classes = await db
         .select({
+            classId: Classes.id,
+            studentId: Students.id,
             class: Classes,
-            enrollment: Enrollments,
-            student: Students,
+            teacher: Teachers,
+            student: Students
         })
         .from(Classes)
         .innerJoin(Enrollments, eq(Enrollments.classId, Classes.id))
-        .where(eq(Classes.schoolId, schoolId))
         .innerJoin(Students, eq(Enrollments.studentId, Students.id))
+        .innerJoin(ClassAssignments, eq(ClassAssignments.classId, Classes.id))
+        .innerJoin(Teachers, eq(ClassAssignments.teacherId, Teachers.id))
+        .where(eq(Classes.schoolId, schoolId))
         .orderBy(Classes.name);
-    
-    const formattedClasses = classes.reduce((acc, item) => {
-        const classId = item.class.id;
-        if (!acc[classId]) {
-            acc[classId] = {
-                ...item.class,
-                students: [],
-            };
-        }
-        acc[classId].students.push(item.student);
-        return acc;
-    }, {} as any);
+
+    const formattedClasses: Record<string, any> = classes.reduce((acc, curr) => {
+                const classId = curr.classId;
+                if (!acc[classId]) {
+                    acc[classId] = {
+                        ...curr.class,
+                        teacher: curr.teacher,
+                        students: [],
+                    };
+                }
+                acc[classId].students.push(curr.student);
+                return acc;
+            }, {} as Record<string, any>);
     return ok(
         {
             classes: Object.values(formattedClasses)

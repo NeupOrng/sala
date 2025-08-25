@@ -6,6 +6,9 @@ import { Classes } from './class';
 import { Schools } from './schools';
 import { Assignments } from './assignment';
 import { Guardians } from './guardians';
+import { Users } from './user';
+import { Teachers } from './teacher';
+import { ClassAssignments } from './class-assignment';
 
 export { Schools } from './schools';
 export { Students } from './students';
@@ -17,6 +20,8 @@ export { Classes } from './class';
 export { Enrollments } from './enrollment';
 export { Assignments } from './assignment';
 export { Scores } from './score';
+export { Teachers } from './teacher';
+export { ClassAssignments } from './class-assignment';
 
 export const studentsRelations = relations(Students, ({ many }) => ({
   enrollments: many(Enrollments),
@@ -70,4 +75,15 @@ export const GuardiansRelations = relations(Guardians, ({ one }) => ({
     fields: [Guardians.studentId],
     references: [Students.id],
   }),
+}));
+
+export const teacherUserRelations = relations(Teachers, ({ one }) => ({
+    user: one(Users, {
+        fields: [Teachers.userId],
+        references: [Users.id],
+    }),
+})); 
+
+export const teacherClassAssignmentsRelations = relations(Teachers, ({ many }) => ({
+    classAssignments: many(ClassAssignments),
 }));
