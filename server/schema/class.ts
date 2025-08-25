@@ -6,6 +6,7 @@ import {
   text
 } from "drizzle-orm/pg-core";
 import { Schools } from "./schools";
+import { StatusEnum } from "./status";
 
 export const Classes = pgTable("classes", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -13,6 +14,5 @@ export const Classes = pgTable("classes", {
   teacherId: uuid("teacher_id").notNull(),
   name: varchar("name", { length: 100 }).notNull(),
   description: text("description"),
-  startDate: timestamp("start_date").notNull(),
-  endDate: timestamp("end_date").notNull(),
+  status: StatusEnum('status').notNull().default("active"),
 });

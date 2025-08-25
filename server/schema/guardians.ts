@@ -1,5 +1,6 @@
 import { pgTable, uuid, varchar, boolean } from "drizzle-orm/pg-core";
 import { Students } from "./students";
+import { StatusEnum } from "./status";
 
 export const Guardians = pgTable("guardians", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -11,4 +12,5 @@ export const Guardians = pgTable("guardians", {
   email: varchar("email", { length: 255 }),
   relationship: varchar("relationship", { length: 50 }),
   isPrimary: boolean("is_primary").default(false).notNull(),
+  status: StatusEnum('status').notNull().default("active")
 });

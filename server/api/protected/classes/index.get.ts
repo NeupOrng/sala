@@ -3,7 +3,6 @@ import { and, eq } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
     const user = event.context.user;
-    console.log("[Classes API] context user:", user);
     if (user === undefined) {
         throw badRequest("User is not authenticated");
     }
