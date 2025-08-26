@@ -5,7 +5,7 @@ import { Schools } from "./schools";
 
 export const Teachers = pgTable("teachers", {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: uuid("user_id").references(() => Users.id).notNull(),
+    userId: uuid("user_id").references(() => Users.id),
     schoolId: uuid("school_id").references(() => Schools.id).notNull(),
     firstName: varchar("first_name", { length: 255 }).notNull(),
     middleName: varchar("middle_name", { length: 255 }),

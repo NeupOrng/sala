@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
         SignUpRequestDto
     );
 
-    const hashedPassword = await hash(requestDto.password, Number(SALT));
+    const hashedPassword = await hash(requestDto.password ?? '', Number(SALT));
 
     const result = await createUserProfile(requestDto, hashedPassword);
     const newUserId = result.newUserId;
@@ -60,7 +60,7 @@ const createUserProfile = async (
     const result = await db
         .insert(Users)
         .values({
-            username: requestDto.username,
+            username: requestDto.username ?? '',
             passwordHash: hashedPassword,
             role: requestDto.role,
             isActive: true,

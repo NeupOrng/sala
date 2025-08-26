@@ -8,7 +8,7 @@ import { Teachers } from "~/server/schema";
 export default defineEventHandler(async (event) => {
     const userContext = event.context.user;
     const requestDto = new SignUpRequestDto(await readBody(event));
-    const hashedPassword = await hash(requestDto.password, Number(SALT));
+    const hashedPassword = await hash(requestDto.password ?? '', Number(SALT));
     const response = {} as any;
 
     if (requestDto.role.toLowerCase() === "teacher") {
@@ -38,7 +38,7 @@ const createTeacherProfile = async (
         const [user] = await txn
             .insert(Users)
             .values({
-                username: requestDto.username,
+                username: requestDto.username ?? '',
                 passwordHash: hashedPassword,
                 role: requestDto.role,
                 isActive: true,

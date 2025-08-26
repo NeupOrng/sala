@@ -2,9 +2,11 @@ import { boolean, date, pgTable, timestamp, unique, uuid, varchar } from "drizzl
 import { Schools } from "./schools";
 import { StatusEnum } from "./status";
 import { GenderEnum } from "./gender";
+import { Users } from "./user";
 
 export const Students = pgTable("students", {
   id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").references(() => Users.id),
   schoolId: uuid("school_id").references(() => Schools.id),
   firstName: varchar("first_name", { length: 255 }).notNull(),
   middleName: varchar("middle_name", { length: 255 }),

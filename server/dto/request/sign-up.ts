@@ -1,7 +1,8 @@
 export interface ISignUpRequestDto {
-    username: string;
-    password: string;
+    username?: string;
+    password?: string;
     role: "student" | "teacher" | "admin";
+    userId?: string
     firstName?: string;
     middleName?: string;
     lastName?: string;
@@ -10,14 +11,15 @@ export interface ISignUpRequestDto {
 }
 
 export class SignUpRequestDto implements ISignUpRequestDto {
-    username: string;
-    password: string;
+    username?: string;
+    password?: string;
     role: "student" | "teacher" | "admin";
     firstName?: string;
     middleName?: string;
     lastName?: string;
     phone?: string;
     email?: string;
+    userId?: string;
 
     constructor(json: any) {
         console.log("SignUpRequestDto input:", json);
@@ -35,6 +37,7 @@ export class SignUpRequestDto implements ISignUpRequestDto {
         this.lastName = json?.lastName ? String(json.lastName) : undefined;
         this.phone = json?.phone ? String(json.phone) : undefined;
         this.email = json?.email ? String(json.email) : undefined;
+        this.userId = json?.userId ? String(json.userId) : undefined;
     }
 
     private validate(json: any) {

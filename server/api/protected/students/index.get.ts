@@ -28,7 +28,9 @@ export default defineEventHandler(async (event) => {
             photoUrl: Students.photoUrl,
             guardians: {
                 id: Guardians.id,
-                name: Guardians.name,
+                firstaName: Guardians.firstName,
+                middleName: Guardians.middleName,
+                lastName: Guardians.lastName,
                 phone: Guardians.phone,
                 email: Guardians.email,
                 relationship: Guardians.relationship,
