@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
                 );
                 if (userJson) {
                     event.context.user = JSON.parse(userJson);
+                    // todo: remove hardcoded schoolId
                     event.context.user.schoolId = "9689e690-36fd-49b3-a0dc-6f5285ff67e1";
                 } else {
                     console.error("[Auth Middleware] Token not found in Redis");
@@ -24,8 +25,11 @@ export default defineEventHandler(async (event) => {
                 throw forbidden("Missing auth token cookie");
             }
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("[Auth Middleware] Error during user lookup:", error);
+        if (error?.statusCode === 403) {
+            setCookie(event, "token", "", {})
+        }
         throw error;
     }
 });

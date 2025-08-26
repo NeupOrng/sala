@@ -1,4 +1,4 @@
-import { integer, pgTable, primaryKey, uuid } from "drizzle-orm/pg-core";
+import { integer, pgTable, primaryKey, timestamp, uuid } from "drizzle-orm/pg-core";
 import { Students } from "./students";
 import { Assignments } from "./assignment";
 
@@ -12,6 +12,8 @@ export const Scores = pgTable(
             .references(() => Assignments.id)
             .notNull(),
         score: integer("score").notNull(),
+        createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+        updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
     },
     (t) => ({
         pk: primaryKey(t.studentId, t.assignmentId),

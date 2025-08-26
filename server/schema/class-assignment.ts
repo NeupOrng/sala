@@ -1,9 +1,13 @@
-import { pgTable, uuid } from "drizzle-orm/pg-core";
+import { pgTable, timestamp, uuid } from "drizzle-orm/pg-core";
 import { Classes } from "./class";
 import { Teachers } from "./teacher";
+import { StatusEnum } from "./status";
 
 export const ClassAssignments = pgTable("class_assignments", {
     id: uuid("id").primaryKey().defaultRandom(),
     teacherId: uuid("teacher_id").references(() => Teachers.id).notNull(),
-    classId: uuid("class_id").references(() => Classes.id).notNull()
+    classId: uuid("class_id").references(() => Classes.id).notNull(),
+    status: StatusEnum('status').notNull().default("active"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });
