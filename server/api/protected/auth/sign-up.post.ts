@@ -20,6 +20,8 @@ export default defineEventHandler(async (event) => {
         );
         response.user = teacherProfile.user;
         response.user.teacherProfile = teacherProfile.teacher;
+    } else {
+        return badRequest("This role cannot be created via this endpoint");
     }
     return created(response);
 });
