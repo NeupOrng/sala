@@ -7,8 +7,7 @@ import redis from "~/server/utils/redis";
 import { RedisKey } from "~/server/dto/constant/redis-key";
 import { forbidden } from "~/server/utils/response/error-helpers";
 import { ok } from "~/server/utils/response/success-helper";
-
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret";
+import { JWT_SECRET } from "~/server/dto/constant/env";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);

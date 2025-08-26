@@ -14,3 +14,8 @@ export function getHeaderValue(
 ): string | string[] | undefined {
     return event.node.req.headers[name.toLowerCase()];
 }
+
+export function validateRequestBody<T>(body: any, DtoClass: { new (data: any): T}): T {
+    const requestDto = new DtoClass(body);
+    return requestDto;
+}

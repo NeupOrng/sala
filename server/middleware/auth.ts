@@ -3,7 +3,7 @@ import redis from "~/server/utils/redis";
 
 export default defineEventHandler(async (event) => {
     try {
-        console. log("[Auth Middleware] Running auth middleware");
+        console.log("[Auth Middleware] Running auth middleware");
         const path = event.path;
         console.log("[Auth Middleware] url :", event.path);
         if (path.startsWith("/api/protected")) {

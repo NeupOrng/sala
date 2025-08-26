@@ -2,35 +2,27 @@ import { hash } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Users } from "~/server/schema/user";
 import { RedisKey } from "~/server/dto/constant/redis-key";
-import { badRequest } from "~/server/utils/response/error-helpers";
 import { created } from "~/server/utils/response/success-helper";
-
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret";
-const SALT = process.env.SALT || 10;
+import { SALT, JWT_SECRET } from "~/server/dto/constant/env";
+import { validateRequestBody } from "~/server/utils/common";
+import { SignUpRequestDto } from "~/server/dto/request/sign-up";
 
 export default defineEventHandler(async (event) => {
-    const body = await readBody(event);
-    const { username, password, role } = body;
-    if (!username || !password) {
-        throw badRequest("Username and password are required");
-    } else if (!role) {
-        throw badRequest("Role is required");
-    }
-    const hashedPassword = await hash(password, Number(SALT));
+    const requestDto = validateRequestBody(
+        await readBody(event),
+        SignUpRequestDto
+    );
 
-    const result = await db.insert(Users).values({
-        username,
-        passwordHash: hashedPassword,
-        role,
-        isActive: true,
-        isVerified: false,
-    }).returning();
+    const hashedPassword = await hash(requestDto.password, Number(SALT));
 
-    const newUserId = result[0]?.id;
+    const result = await createUserProfile(requestDto, hashedPassword);
+    const newUserId = result.newUserId;
+    const response = {} as any;
+    response.user = result.user;
 
     // Generate JWT token
     const token = jwt.sign(
-        { id: newUserId, email: username, role },
+        { id: newUserId, username: requestDto.username, role: requestDto.role },
         JWT_SECRET,
         { expiresIn: "7d" }
     );
@@ -44,9 +36,37 @@ export default defineEventHandler(async (event) => {
         maxAge: 60 * 60 * 24 * 7, // 7 days
     });
 
-    const { passwordHash, ...safeUser } = result[0];
-    redis.set(`${RedisKey.authToken}:${token}`, JSON.stringify(safeUser), "EX", 60 * 60 *24 * 7)
-    redis.set(`${RedisKey.authUser}:${newUserId}`, token, "EX", 60 * 60 *24 * 7)
+    const { passwordHash, ...safeUser } = result.user;
+    redis.set(
+        `${RedisKey.authToken}:${token}`,
+        JSON.stringify(safeUser),
+        "EX",
+        60 * 60 * 24 * 7
+    );
+    redis.set(
+        `${RedisKey.authUser}:${newUserId}`,
+        token,
+        "EX",
+        60 * 60 * 24 * 7
+    );
 
-    return created({})
+    return created(response);
 });
+
+const createUserProfile = async (
+    requestDto: SignUpRequestDto,
+    hashedPassword: string
+): Promise<{ newUserId: string; user: typeof Users.$inferSelect }> => {
+    const result = await db
+        .insert(Users)
+        .values({
+            username: requestDto.username,
+            passwordHash: hashedPassword,
+            role: requestDto.role,
+            isActive: true,
+            isVerified: false,
+        })
+        .returning();
+    const newUserId = result[0]?.id;
+    return { newUserId, user: result[0] };
+};
