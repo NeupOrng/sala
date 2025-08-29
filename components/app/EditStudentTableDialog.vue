@@ -90,7 +90,7 @@ const dateOfBirthString = computed({
 
 <template>
   <Dialog :open="!!student" @update:open="handleClose">
-    <DialogContent class="max-h-[80vh] overflow-hidden">
+    <DialogContent class="max-h-[80vh] overflow-hidden sm:max-w-lg">
       <DialogHeader class="h-fit">
         <DialogTitle>Edit Student</DialogTitle>
       </DialogHeader>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import type { IGenderCount } from '@/models/gender-count'
+import type { IGenderCount } from '~/models/dto/gender-count'
 import { Doughnut } from 'vue-chartjs'
 import {
   Chart as ChartJS,

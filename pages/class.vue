@@ -19,8 +19,8 @@ onMounted(async () => {
                 :onCreateClass="schoolStore.createClass"
             />
         </div>
-        <div class="p-4 flex ">
-            <ClassDisplayItem v-for="item in classes" :key="item.id" :classItem="item" />
+        <div class="p-4 grid grid-cols-4 gap-4">
+            <ClassDisplayItem v-for="item in classes" :key="item.id" :classItem="item" :onSaveClass="schoolStore.editClass" />
         </div>
     </ClientOnly>
 </template>

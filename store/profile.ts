@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { ILoginModel } from "~/models/auth/login";
+import type { ILoginModel } from "~/models/api/auth/login";
 
 export const useProfileStore = defineStore("profiileStore", {
     state: () => ({

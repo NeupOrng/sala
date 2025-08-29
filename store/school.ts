@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import type { ISchool } from "./model/school";
-import type { IGenderCount } from "~/models/gender-count";
+import type { IGenderCount } from "~/models/dto/gender-count";
 import { Student } from "./model/student";
 import { ClassDto } from "./model/class";
 
@@ -193,6 +193,10 @@ export const useSchoolStore = defineStore("schoolStore", {
 
         async createClass() {
             console.log("Creating class with data:");
+        },
+
+        async editClass(updatedClass: ClassDto) {
+            console.log("Editing class with data:", updatedClass);
         },
         async initialize() {
             await this.fetchSchool();
