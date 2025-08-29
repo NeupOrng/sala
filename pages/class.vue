@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { useStudentStore } from "~/store/student";
+import { useSchoolStore } from '~/store/school';
 
 const classes = computed(() => {
-    const studentStore = useStudentStore();
-    return studentStore.classes;
+    const schoolStore = useSchoolStore();
+    return schoolStore.classes;
 });
-const studentStore = useStudentStore();
+const schoolStore = useSchoolStore();
 </script>
 <template>
     <ClientOnly>
         <div class="py-2 px-4 flex justify-between items-center">
             <p class="font-bold text-xl">Class</p>
             <AppCreateClassButtonDialog
-                :onCreateClass="studentStore.createClass"
+                :onCreateClass="schoolStore.createClass"
             />
         </div>
         <div class="p-4 flex ">

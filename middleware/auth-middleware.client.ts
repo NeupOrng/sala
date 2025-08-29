@@ -1,7 +1,7 @@
-import { useAuthStore } from "~/store/auth";
+import { useProfileStore } from "~/store/profile";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    const authStore = useAuthStore();
+    const authStore = useProfileStore();
     const token = useCookie("token");
     console.log('token', token.value)
     if(to.meta.isRequireAuth ?? false) {

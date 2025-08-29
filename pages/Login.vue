@@ -2,10 +2,10 @@
 import { useNotification } from "~/composables/use-notification";
 import { Form, FormField } from "~/components/ui/form";
 import { LoginModel, type ILoginModel } from "~/models/auth/login";
-import { useAuthStore } from "~/store/auth";
+import { useProfileStore } from "~/store/profile";
 
 const { addNotification } = useNotification();
-const authStore = useAuthStore();
+const profileStore = useProfileStore();
 const loginModel:ILoginModel = {
     username: "",
     password: "",
@@ -20,7 +20,7 @@ const formContext = loginModelObj.getForm();
 
 const onSubmit = formContext.handleSubmit(async (values) => {
     try {
-        const success = await authStore.login(values); // assuming you have a login action
+        const success = await profileStore.login(values); // assuming you have a login action
         if (success) {
             addNotification({
                 title: "Login Success",

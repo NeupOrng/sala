@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import type { ILoginModel } from "~/models/auth/login";
 
-export const useAuthStore = defineStore("authStore", {
+export const useProfileStore = defineStore("profiileStore", {
     state: () => ({
         username: "",
         role: "",

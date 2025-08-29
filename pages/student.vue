@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { useStudentStore } from "~/store/student";
+import { useSchoolStore } from "~/store/school";
 
-const studentStore = useStudentStore();
-const computedStudents = computed(() => studentStore.students);
+const schoolStore = useSchoolStore();
+const computedStudents = computed(() => schoolStore.students);
 </script>
 <template>
     <ClientOnly>
         <div class="py-2 px-4 flex justify-between items-center">
             <p class="font-bold text-xl">Students</p>
             <AppCreateStudentButtonDialog 
-                :onCreateStudent="studentStore.createStudent"
-                :onUploadImage="studentStore.uploadImage"
+                :onCreateStudent="schoolStore.createStudent"
+                :onUploadImage="schoolStore.uploadImage"
             />
         </div>
         <AppStudentTable
             :students="computedStudents"
-            :onSaveStudent="studentStore.editStudent"
-            :onDeleteStudent="studentStore.deleteStudent"
-            :onUploadImage="studentStore.uploadImage"
+            :onSaveStudent="schoolStore.editStudent"
+            :onDeleteStudent="schoolStore.deleteStudent"
+            :onUploadImage="schoolStore.uploadImage"
         />
     </ClientOnly>
 </template>
