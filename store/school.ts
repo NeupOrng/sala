@@ -16,11 +16,12 @@ export const useSchoolStore = defineStore("schoolStore", {
         classes: [] as ClassDto[],
     }),
     actions: {
-        async fetchSchools() {
+        async fetchSchool() {
             const { $apiFetch } = useNuxtApp();
-            this.school = (await $apiFetch("/api/schools", {
+            const school = await $apiFetch("/api/protected/schools", {
                 credentials: "include",
-            })) as unknown as ISchool;
+            });
+            this.school = school.data?.school || ({} as ISchool);
         },
 
         async fetchOnLoad() {
@@ -194,9 +195,24 @@ export const useSchoolStore = defineStore("schoolStore", {
             console.log("Creating class with data:");
         },
         async initialize() {
+            await this.fetchSchool();
             await this.fetchOnLoad();
             await this.fetchStudents();
             await this.fetchClasses();
+        },
+    },
+    getters: {
+        totalStudents(): number {
+            return this.students.length;
+        },
+        totalClasses(): number {
+            return this.classes.length;
+        },
+        totalTeachers(): number {
+            return 5; // Placeholder until teachers are implemented
+        },
+        schoolName(): string {
+            return this.school.name || "Your School Name";
         },
     },
 });

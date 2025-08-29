@@ -12,6 +12,14 @@ onMounted(async () => {
 </script>
 <template>
   <ClientOnly>
-    <AppDashboardStudentGender :gender="schoolStore.genderCount" />
+    <div class="flex h-[400px] gap-4 p-4">
+        <AppDashboardSchoolInfo
+            :schoolName="schoolStore.schoolName"
+            :totalStudents="schoolStore.totalStudents"
+            :totalClasses="schoolStore.totalClasses"
+            :totalTeachers="schoolStore.totalTeachers"
+        />
+        <AppDashboardStudentGender :gender="schoolStore.genderCount" />
+    </div>
   </ClientOnly>
 </template>

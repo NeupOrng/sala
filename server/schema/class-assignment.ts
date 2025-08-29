@@ -7,7 +7,7 @@ export const ClassAssignments = pgTable("class_assignments", {
     id: uuid("id").primaryKey().defaultRandom(),
     teacherId: uuid("teacher_id").references(() => Teachers.id).notNull(),
     classId: uuid("class_id").references(() => Classes.id).notNull(),
-    status: StatusEnum('status').notNull().default("active"),
+    status: StatusEnum('status').notNull().default("active").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });

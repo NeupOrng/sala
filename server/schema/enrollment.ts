@@ -13,8 +13,8 @@ export const Enrollments = pgTable(
             .references(() => Classes.id)
             .notNull(),
         status: StatusEnum("status").notNull().default("active"),
-        createdAt: timestamp("created_at").defaultNow().notNull(),
-        updatedAt: timestamp("updated_at").defaultNow().notNull(),
+        createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+        updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
     },
     (t) => ({
         pk: primaryKey(t.studentId, t.classId),

@@ -1,7 +1,6 @@
 import { pgTable, uuid, varchar, timestamp, text } from "drizzle-orm/pg-core";
 import { Schools } from "./schools";
 import { StatusEnum } from "./status";
-import { ClassAssignments } from "./class-assignment";
 
 export const Classes = pgTable("classes", {
     id: uuid("id").primaryKey().defaultRandom(),

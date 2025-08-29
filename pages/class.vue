@@ -6,6 +6,10 @@ const classes = computed(() => {
     return schoolStore.classes;
 });
 const schoolStore = useSchoolStore();
+
+onMounted(async () => {
+    await schoolStore.fetchClasses();
+})
 </script>
 <template>
     <ClientOnly>
