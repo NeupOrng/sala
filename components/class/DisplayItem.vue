@@ -18,6 +18,7 @@ import {
 import type { ClassDto } from "~/store/model/class";
 import { ref } from "vue";
 import type { Student } from "~/store/model/student";
+import { is } from "drizzle-orm";
 
 defineProps<{
     classItem: ClassDto;
@@ -53,10 +54,19 @@ const onSaveEditedClass = (updatedClass: ClassDto) => {
         isEditing.value = false;
     }, 1000);
 };
+watch(
+    () => isDialogOpen.value,
+    (newVal) => {
+        if (!newVal) {
+            isLoading.value = false;
+            isEditing.value = false;
+        }
+    }
+);
 </script>
 
 <template>
-    <Dialog v-model:open="isDialogOpen">
+    <Dialog v-model:open="isDialogOpen" >
         <DialogTrigger as-child>
             <Card
                 class="w-64 m-2 cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100"
@@ -100,30 +110,33 @@ const onSaveEditedClass = (updatedClass: ClassDto) => {
                 </DialogTitle>
             </DialogHeader>
             <div class="mt-4 space-y-6" :aria-disabled="isLoading">
-                <div class="grid grid-cols-2 gap-6">
+                <div class="flex flex-row justify-between gap-6">
                     <div>
                         <h3 class="font-semibold text-lg text-gray-700">
-                            Description
+                            <span>Description</span>
                         </h3>
-                        <p class="text-sm text-gray-600 italic">
+                        <p class="text-sm text-gray-600 italic pl-2">
                             {{ classItem.description }}
                         </p>
                     </div>
-                    <div class="text-right">
+                    <div class="text-left w-fit px-5">
                         <h3 class="font-semibold text-lg text-gray-700">
                             Teacher
                         </h3>
-                        <p class="text-sm text-gray-800">
-                            {{ classItem.teacher.fullName }}
-                        </p>
+                        <div class="pl-2">
+                            <p class="text-sm text-gray-800 italic">
+                                {{ classItem.teacher.fullName }}
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div>
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="text-lg font-semibold text-gray-700">
-                            Students ({{ classItem.students.length }})
+                            Students
                         </h3>
                         <Button
+                            v-if="isEditing"
                             size="sm"
                             @click="addStudent"
                             :disabled="isLoading"
@@ -133,6 +146,9 @@ const onSaveEditedClass = (updatedClass: ClassDto) => {
                     <Table class="w-full max-h-56">
                         <TableHeader>
                             <TableRow>
+                                <TableHead class="text-gray-600"
+                                    >#</TableHead
+                                >
                                 <TableHead class="text-gray-600"
                                     >Student Id</TableHead
                                 >
@@ -145,16 +161,21 @@ const onSaveEditedClass = (updatedClass: ClassDto) => {
                                 <TableHead class="text-gray-600"
                                     >Last Name</TableHead
                                 >
-                                <TableHead class="text-right text-gray-600"
+                                <TableHead
+                                    class="text-right text-gray-600"
+                                    v-if="isEditing"
                                     >Actions</TableHead
                                 >
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             <TableRow
-                                v-for="student in classItem.students"
+                                v-for="(student, index) in classItem.students"
                                 :key="student.id"
                             >
+                                 <TableCell class="text-gray-700">{{
+                                    index + 1
+                                }}</TableCell>
                                 <TableCell class="text-gray-700">{{
                                     student.studentIdNumber
                                 }}</TableCell>
@@ -167,7 +188,7 @@ const onSaveEditedClass = (updatedClass: ClassDto) => {
                                 <TableCell class="text-gray-700">{{
                                     student.lastName
                                 }}</TableCell>
-                                <TableCell class="text-right">
+                                <TableCell class="text-right" v-if="isEditing">
                                     <Button
                                         variant="destructive"
                                         :disabled="isLoading"

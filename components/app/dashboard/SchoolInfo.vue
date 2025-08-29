@@ -7,7 +7,7 @@ const props = defineProps<{
 }>();
 </script>
 <template>
-    <Card class="w-full max-w-md mx-auto shadow-md hover:shadow-lg transition-shadow duration-300">
+    <Card class="w-full max-w-md shadow-md hover:shadow-lg transition-shadow duration-300">
         <CardHeader>
             <CardTitle class="text-2xl font-semibold text-gray-800">{{ schoolName }}</CardTitle>
             <div class="mt-2 h-1 w-16 bg-blue-500 rounded mx-auto"></div>

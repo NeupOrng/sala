@@ -77,7 +77,7 @@ watch(
 </script>
 
 <template>
-  <Card class="w-full max-w-md">
+  <Card class="w-full max-w-md shadow-md hover:shadow-lg transition-shadow duration-300">
     <CardHeader>
       <CardTitle>Total Students by Gender</CardTitle>
     </CardHeader>
