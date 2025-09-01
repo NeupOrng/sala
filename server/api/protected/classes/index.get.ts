@@ -1,4 +1,10 @@
-import { Classes, Enrollments, Students, ClassAssignments, Teachers } from "~/server/schema";
+import {
+    Classes,
+    Enrollments,
+    Students,
+    ClassAssignments,
+    Teachers,
+} from "~/server/schema";
 import { and, eq } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
@@ -21,31 +27,38 @@ export default defineEventHandler(async (event) => {
             studentId: Students.id,
             class: Classes,
             teacher: Teachers,
-            student: Students
+            student: Students,
         })
         .from(Classes)
-        .innerJoin(Enrollments, eq(Enrollments.classId, Classes.id))
-        .innerJoin(Students, eq(Enrollments.studentId, Students.id))
-        .innerJoin(ClassAssignments, eq(ClassAssignments.classId, Classes.id))
-        .innerJoin(Teachers, eq(ClassAssignments.teacherId, Teachers.id))
+        .leftJoin(Enrollments, eq(Classes.id, Enrollments.classId))
+        .leftJoin(Students, eq(Enrollments.studentId, Students.id))
+        .leftJoin(ClassAssignments, eq(ClassAssignments.classId, Classes.id))
+        .leftJoin(Teachers, eq(ClassAssignments.teacherId, Teachers.id))
         .where(eq(Classes.schoolId, schoolId))
         .orderBy(Classes.name);
 
-    const formattedClasses: Record<string, any> = classes.reduce((acc, curr) => {
-                const classId = curr.classId;
-                if (!acc[classId]) {
-                    acc[classId] = {
-                        ...curr.class,
-                        teacher: curr.teacher,
-                        students: [],
-                    };
-                }
+    const formattedClasses: Record<string, any> = classes.reduce(
+        (acc, curr) => {
+            const classId = curr.classId;
+            console.log(acc);
+            if (!acc[classId]) {
+                acc[classId] = {
+                    ...curr.class,
+                    teacher: curr.teacher,
+                    students: [],
+                };
+            }
+            // Only push non-null students to the array
+            if (curr.student) {
                 acc[classId].students.push(curr.student);
-                return acc;
-            }, {} as Record<string, any>);
-    return ok(
-        {
-            classes: Object.values(formattedClasses)
-        }
+            }
+            return acc;
+        },
+        {} as Record<string, any>
     );
+
+    return ok({
+        classes: Object.values(formattedClasses),
+        formattedClasses,
+    });
 });

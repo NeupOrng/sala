@@ -6,6 +6,7 @@ import { StatusEnum } from "./status";
 export const Enrollments = pgTable(
     "enrollments",
     {
+        id: uuid("id").primaryKey().defaultRandom(),
         studentId: uuid("student_id")
             .references(() => Students.id)
             .notNull(),
@@ -15,8 +16,5 @@ export const Enrollments = pgTable(
         status: StatusEnum("status").notNull().default("active"),
         createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
         updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
-    },
-    (t) => ({
-        pk: primaryKey(t.studentId, t.classId),
-    })
+    }
 );

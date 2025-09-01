@@ -26,4 +26,15 @@ export class ClassDto implements IClassDto {
         this.schoolId = String(json?.schoolId ?? "");
         this.description = String(json?.description ?? "");
     }
+
+    get toEditClassRequestString(): string {
+        const req = {
+            classId: this.id,
+            name: this.name,
+            description: this.description,
+            teacherId: this.teacher.id,
+            students: this.students.map((std) => std.id)
+        }
+        return JSON.stringify(req);
+    }
 }

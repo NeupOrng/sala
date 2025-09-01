@@ -79,6 +79,7 @@ export class EditClassRequestDto implements IEditClassRequestDto {
     }
 
     private validate(json: any) {
+        console.log("Validating EditClassRequestDto", json)
         if (!json.classId) {
             throw badRequest("classId is required")
         } else if (!json.name) {

@@ -197,12 +197,35 @@ export const useSchoolStore = defineStore("schoolStore", {
 
         async editClass(updatedClass: ClassDto) {
             console.log("Editing class with data:", updatedClass);
-            this.classes.forEach((cls: ClassDto) => {
-                if(cls.id === updatedClass.id) {
-                    cls = updatedClass;
+            const { addNotification } = useNotification();
+            const { $apiFetch } = useNuxtApp();
+            try {
+                const res = await $apiFetch("/api/protected/classes", {
+                    method: "PUT",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: updatedClass.toEditClassRequestString,
+                });
+                if (res.statusCode !== 200) {
+                    throw new Error(
+                        res.statusMessage || "Failed to create student"
+                    );
                 }
-            })
-            
+                addNotification({
+                    title: "Success",
+                    description: "Class Updated Successfully",
+                    type: "default",
+                    duration: 4000,
+                })
+            } catch (err: any) {
+                addNotification({
+                    title: "Update Error",
+                    description: err.message || "Unknown error",
+                    type: "destructive",
+                    duration: 4000,
+                });
+            }
+            await this.fetchClasses();
         },
         async initialize() {
             await this.fetchSchool();
@@ -216,8 +239,7 @@ export const useSchoolStore = defineStore("schoolStore", {
             if (!cls) return this.students;
             const assignedStudentIds = new Set(cls.students.map((s) => s.id));
             return this.students.filter((s) => !assignedStudentIds.has(s.id));
-        }
-
+        },
     },
     getters: {
         totalStudents(): number {
@@ -232,5 +254,8 @@ export const useSchoolStore = defineStore("schoolStore", {
         schoolName(): string {
             return this.school.name || "Your School Name";
         },
+        currentClasses(): ClassDto[] {
+            return this.classes;
+        }
     },
 });

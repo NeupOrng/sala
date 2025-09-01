@@ -58,14 +58,14 @@ const onSaveEditedClass = async () => {
         return studentModel.studentDto;
     })
     await props.onSaveClass(classModel.value);
-    isLoading.value = false;
-    isEditing.value = false;
-    isDialogOpen.value = false;
     studentsModel.value = props.classItem.students.map((student) => ({
         ...student,
         isSelected: false,
         isNewStudent: false,
     }))
+    isLoading.value = false;
+    isEditing.value = false;
+    isDialogOpen.value = false;
 };
 
 watch(

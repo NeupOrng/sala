@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useSchoolStore } from "~/store/school";
-
-const classes = computed(() => {
-    const schoolStore = useSchoolStore();
-    return schoolStore.classes;
-});
 const schoolStore = useSchoolStore();
+const classes = computed(() => {
+    return schoolStore.currentClasses;
+});
+
+
 
 onMounted(async () => {
     await schoolStore.fetchClasses();
