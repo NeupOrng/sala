@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useSchoolStore } from '~/store/school';
+import { useSchoolStore } from "~/store/school";
 
 const classes = computed(() => {
     const schoolStore = useSchoolStore();
@@ -9,7 +9,7 @@ const schoolStore = useSchoolStore();
 
 onMounted(async () => {
     await schoolStore.fetchClasses();
-})
+});
 </script>
 <template>
     <ClientOnly>
@@ -20,7 +20,14 @@ onMounted(async () => {
             />
         </div>
         <div class="p-4 grid grid-cols-4 gap-4">
-            <ClassDisplayItem v-for="item in classes" :key="item.id" :classItem="item" :students="schoolStore.students" :onSaveClass="schoolStore.editClass" />
+            <ClassDisplayItem
+                v-for="item in classes"
+                :key="item.id"
+                :classItem="item"
+                :students="schoolStore.students"
+                :onSaveClass="schoolStore.editClass"
+                :availableStudent="schoolStore.getAvailableStudentsForClass(item.id)"
+            />
         </div>
     </ClientOnly>
 </template>

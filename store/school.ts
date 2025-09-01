@@ -197,6 +197,12 @@ export const useSchoolStore = defineStore("schoolStore", {
 
         async editClass(updatedClass: ClassDto) {
             console.log("Editing class with data:", updatedClass);
+            this.classes.forEach((cls: ClassDto) => {
+                if(cls.id === updatedClass.id) {
+                    cls = updatedClass;
+                }
+            })
+            
         },
         async initialize() {
             await this.fetchSchool();
@@ -204,6 +210,14 @@ export const useSchoolStore = defineStore("schoolStore", {
             await this.fetchStudents();
             await this.fetchClasses();
         },
+
+        getAvailableStudentsForClass(classId: string): Student[] {
+            const cls = this.classes.find((c) => c.id === classId);
+            if (!cls) return this.students;
+            const assignedStudentIds = new Set(cls.students.map((s) => s.id));
+            return this.students.filter((s) => !assignedStudentIds.has(s.id));
+        }
+
     },
     getters: {
         totalStudents(): number {
