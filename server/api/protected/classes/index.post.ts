@@ -1,4 +1,4 @@
-import { CreateClassRequestDto } from "~/server/dto/request/create-class";
+import { CreateClassRequestDto } from "~/server/dto/request/class";
 import {
     ClassAssignments,
     Classes,
