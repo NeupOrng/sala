@@ -5,7 +5,6 @@ import _ from "lodash";
 
 export default defineEventHandler(async (event) => {
     const user = event.context.user;
-    console.log("[Students API] context user:", user);
     if(user === undefined) {
         // If user is authenticated, we can use their school ID
         const schoolId = user.schoolId;

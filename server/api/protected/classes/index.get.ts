@@ -18,9 +18,6 @@ export default defineEventHandler(async (event) => {
         throw badRequest("User does not belong to any school");
     }
 
-    // Fetch classes with student base on enrollment table
-    console.log("[Classes API] Fetching classes for school:", schoolId);
-
     const classes = await db
         .select({
             classId: Classes.id,
@@ -40,7 +37,6 @@ export default defineEventHandler(async (event) => {
     const formattedClasses: Record<string, any> = classes.reduce(
         (acc, curr) => {
             const classId = curr.classId;
-            console.log(acc);
             if (!acc[classId]) {
                 acc[classId] = {
                     ...curr.class,

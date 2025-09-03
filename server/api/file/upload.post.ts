@@ -10,7 +10,6 @@ export const config = {
 };
 
 export default defineEventHandler(async (event) => {
-    console.log("file upload", event);
     const form = formidable({ multiples: false });
 
     const { files } = await new Promise<{

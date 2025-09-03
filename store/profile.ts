@@ -20,7 +20,6 @@ export const useProfileStore = defineStore("profiileStore", {
                 const response = await $fetch("/api/protected/heartbeat", {
                     credentials: "include",
                 });
-                console.log("check authorized", response);
                 // Check if the response body indicates an authorization failure
                 if (
                     response.statusMessage &&
@@ -59,7 +58,6 @@ export const useProfileStore = defineStore("profiileStore", {
                     },
                     credentials: "include",
                 });
-                console.log('login', response)
                 if (response.statusCode === 200) {
                     this.isAuthorized = true;
                     this.username = request.username;

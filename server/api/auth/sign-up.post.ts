@@ -4,14 +4,10 @@ import { Users } from "~/server/schema/user";
 import { RedisKey } from "~/server/dto/constant/redis-key";
 import { created } from "~/server/utils/response/success-helper";
 import { SALT, JWT_SECRET } from "~/server/dto/constant/env";
-import { validateRequestBody } from "~/server/utils/common";
 import { SignUpRequestDto } from "~/server/dto/request/sign-up";
 
 export default defineEventHandler(async (event) => {
-    const requestDto = validateRequestBody(
-        await readBody(event),
-        SignUpRequestDto
-    );
+    const requestDto = new SignUpRequestDto(await readBody(event));
 
     const hashedPassword = await hash(requestDto.password ?? '', Number(SALT));
 

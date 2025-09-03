@@ -1,6 +1,15 @@
 <script setup lang="ts">
-import _ from 'lodash';
+import _ from "lodash";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "../ui/select";
 import {
     Dialog,
     DialogContent,
@@ -18,18 +27,24 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { ClassDto } from "~/store/model/class";
-import { StudentModel, type IStudentModel, type Student } from "~/store/model/student";
+import {
+    StudentModel,
+    type IStudentModel,
+    type Student,
+} from "~/store/model/student";
+import type { TeacherDto } from "~/store/model/teacher";
 
 const props = defineProps<{
     classItem: ClassDto;
     onSaveClass: (updatedClass: ClassDto) => Promise<void>;
-    availableStudent: Student[],
+    availableStudent: Student[];
+    teachers: TeacherDto[];
 }>();
 
 const isDialogOpen = ref(false);
 const isEditing = ref(false);
 const isLoading = ref(false);
-const classModel = ref<ClassDto>(_.clone(props.classItem))
+const classModel = ref<ClassDto>(_.clone(props.classItem));
 const studentsModel = ref<IStudentModel[]>(
     props.classItem.students.map((student) => ({
         ...student,
@@ -39,7 +54,9 @@ const studentsModel = ref<IStudentModel[]>(
 );
 
 const removeStudent = (student: IStudentModel) => {
-    studentsModel.value = studentsModel.value.filter((std) => student.id != std.id);    
+    studentsModel.value = studentsModel.value.filter(
+        (std) => student.id != std.id
+    );
 };
 
 const onEditingToggle = () => {
@@ -56,16 +73,17 @@ const onSaveEditedClass = async () => {
     classModel.value.students = studentsModel.value.map((std) => {
         const studentModel = new StudentModel(std);
         return studentModel.studentDto;
-    })
-    await props.onSaveClass(classModel.value);
-    studentsModel.value = props.classItem.students.map((student) => ({
-        ...student,
-        isSelected: false,
-        isNewStudent: false,
-    }))
-    isLoading.value = false;
-    isEditing.value = false;
-    isDialogOpen.value = false;
+    });
+    await props.onSaveClass(classModel.value).then(() => {
+        studentsModel.value = props.classItem.students.map((student) => ({
+            ...student,
+            isSelected: false,
+            isNewStudent: false,
+        }));
+        isLoading.value = false;
+        isEditing.value = false;
+        isDialogOpen.value = false;
+    });
 };
 
 watch(
@@ -142,7 +160,23 @@ const handleAddStudents = (studentIds: IStudentModel[]) => {
                         <h3 class="font-semibold text-lg text-gray-700">
                             Teacher
                         </h3>
-                        <div class="pl-2">
+                        <Select v-model="classModel.teacher" v-if="isEditing">
+                            <SelectTrigger class="w-[180px]">
+                                <SelectValue placeholder="Select a teacher" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem
+                                        v-for="(teacher, index) in teachers"
+                                        :key="teacher.id"
+                                        :value="teacher"
+                                    >
+                                        {{ teacher.fullName }}
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        <div class="pl-2" v-else>
                             <p class="text-sm text-gray-800 italic">
                                 {{ classItem.teacher.fullName }}
                             </p>
@@ -193,7 +227,9 @@ const handleAddStudents = (studentIds: IStudentModel[]) => {
                             <TableRow
                                 v-for="(student, index) in studentsModel"
                                 :key="student.id"
-                                :class="student.isNewStudent ? 'bg-emerald-100' : ''"
+                                :class="
+                                    student.isNewStudent ? 'bg-emerald-100' : ''
+                                "
                             >
                                 <TableCell class="text-gray-700">{{
                                     index + 1

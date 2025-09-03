@@ -6,7 +6,6 @@ import { Schools, Guardians, Students } from "~/server/schema";
 
 export default defineEventHandler(async (event) => {
     const schoolId = event.context.user?.schoolId;
-    console.log("[Students API] Fetching students for school:", event.context.user);
     if (!schoolId) {
         throw badRequest("Missing school_id header");
     }

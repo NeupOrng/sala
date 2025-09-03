@@ -34,7 +34,6 @@ const createClass = async (
     request: CreateClassRequestDto,
     schoolId: string
 ) => {
-    console.log("[Classes API] Creating class for school:", request, schoolId);
     const newClassDto: typeof Classes.$inferInsert = {
         schoolId: schoolId,
         name: request.name,
