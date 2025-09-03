@@ -8,14 +8,14 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import type { Student } from "~/store/model/student";
+import type { StudentDto } from "~/model/student";
 defineProps<{
-  students: Student[]
-  onSaveStudent: (student: Student) => void
-  onDeleteStudent: (student: Student) => void
+  students: StudentDto[]
+  onSaveStudent: (student: StudentDto) => void
+  onDeleteStudent: (student: StudentDto) => void
   onUploadImage: (file: File, studentId: string) => Promise<string>;
 }>();
-const selectedStudent = ref<Student | null>(null);
+const selectedStudent = ref<StudentDto | null>(null);
 </script>
 <template>
   <div>
@@ -47,7 +47,7 @@ const selectedStudent = ref<Student | null>(null);
     </Table>
     <AppEditStudentTableDialog
       v-if="selectedStudent"
-      :student="selectedStudent as Student | null"
+      :student="selectedStudent as StudentDto | null"
       :onSave="onSaveStudent"
       :onDelete="onDeleteStudent"
       :onUploadImage="onUploadImage"

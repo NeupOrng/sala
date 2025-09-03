@@ -1,6 +1,6 @@
 import type { ISchool } from "./school";
 
-export interface IStudent {
+export interface IStudentDto {
     id: string;
     firstName: string;
     middleName?: string;
@@ -20,7 +20,7 @@ export interface IStudent {
     photoUrl: string;
 }
 
-export class Student implements IStudent {
+export class StudentDto implements IStudentDto {
     id: string;
     firstName: string;
     middleName?: string;
@@ -74,7 +74,7 @@ export class Student implements IStudent {
     }
 }
 
-export interface IStudentModel extends IStudent {
+export interface IStudentModel extends IStudentDto {
     isSelected: boolean;
     isNewStudent: boolean;
 }
@@ -122,7 +122,7 @@ export class StudentModel implements IStudentModel {
         this.photoUrl = json.photoUrl;
     }
 
-    get studentDto(): Student {
-        return new Student(this);
+    get studentDto(): StudentDto {
+        return new StudentDto(this);
     }
 }

@@ -15,25 +15,20 @@ import {
 } from "~/components/ui/table";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Button } from "~/components/ui/button";
-import { ClassDto } from "~/store/model/class";
-import { Student, type IStudentModel } from "~/store/model/student";
+import { ClassDto } from "~/model/class";
+import { StudentDto, type IStudentModel } from "~/model/student";
 import { useSchoolStore } from "~/store/school";
 
 // Props
 const props = defineProps({
-    classItem: {
-        type: ClassDto,
-        required: true,
-    },
     availableStudent: {
-        type: Array<Student>,
+        type: Array<StudentDto>,
         required: true
     }
 });
 
 const emit = defineEmits(["update:isAddStudentDialogOpen", "add-students"]);
 
-const schoolStore = useSchoolStore();
 const selectedStudents = ref({} as Record<string, boolean>);
 const selectAll = ref(false);
 const isLoading = ref(false);

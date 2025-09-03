@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useNotification } from "~/composables/use-notification";
 import { Form, FormField } from "~/components/ui/form";
-import { LoginModel, type ILoginModel } from "~/models/api/auth/login";
+import { LoginModel, type ILoginModel } from "~/model/login";
 import { useProfileStore } from "~/store/profile";
 
 const { addNotification } = useNotification();

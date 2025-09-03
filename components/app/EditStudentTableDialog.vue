@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import type { Student } from "~/store/model/student";
+import type { StudentDto } from "~/model/student";
 import { cloneDeep } from "lodash";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -21,15 +21,15 @@ import { Label } from "@/components/ui/label";
 import { computed } from "vue";
 
 const props = defineProps<{
-  student: Student | null;
-  onSave: (student: Student) => void;
-  onDelete: (student: Student) => void;
+  student: StudentDto | null;
+  onSave: (student: StudentDto) => void;
+  onDelete: (student: StudentDto) => void;
   onUploadImage: (file: File, studentId: string) => Promise<string>;
 }>();
 
 const emit = defineEmits(["close"]);
 
-const editableStudent = ref<Student | null>(null);
+const editableStudent = ref<StudentDto | null>(null);
 const imagePreview = ref<string | null>(null);
 const imageLoading = ref(true);
 

@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
-import type { ISchool } from "./model/school";
-import type { IGenderCount } from "~/models/dto/gender-count";
-import { Student } from "./model/student";
-import { ClassDto } from "./model/class";
+import type { ISchool } from "../model/school";
+import type { IGenderCount } from "~/model/general/gender-count";
+import { StudentDto } from "../model/student";
+import { ClassDto, CreateClassModelDto } from "../model/class";
 import useClassApi from "./fetch-api/class-api";
 import useSchoolApi from "./fetch-api/school-api";
-import { TeacherDto } from "./model/teacher";
+import { TeacherDto } from "../model/teacher";
 import useTeacherApi from "./fetch-api/teacher-api";
 
 export const useSchoolStore = defineStore("schoolStore", () => {
@@ -15,7 +15,7 @@ export const useSchoolStore = defineStore("schoolStore", () => {
         shortName: "",
     });
     const genderCount = ref<IGenderCount[]>([]);
-    const students = ref<Student[]>([]);
+    const students = ref<StudentDto[]>([]);
     const classes = ref<ClassDto[]>([]);
     const teachers = ref<TeacherDto[]>([]);
     const schoolApi = useSchoolApi();
@@ -51,13 +51,13 @@ export const useSchoolStore = defineStore("schoolStore", () => {
                 credentials: "include",
             });
             students.value = (data?.students || []).map(
-                (student: any) => new Student(student)
+                (student: any) => new StudentDto(student)
             );
         } catch (err) {
             console.error("Unexpected error fetching students:", err);
         }
     }
-    async function editStudent(student: Student) {
+    async function editStudent(student: StudentDto) {
         const { addNotification } = useNotification();
         const { $apiFetch } = useNuxtApp();
         try {
@@ -76,7 +76,7 @@ export const useSchoolStore = defineStore("schoolStore", () => {
             // Update local students array
             const idx = students.value.findIndex((s) => s.id === student.id);
             if (idx !== -1) {
-                students.value[idx] = new Student(data?.student);
+                students.value[idx] = new StudentDto(data?.student);
             }
 
             addNotification({
@@ -95,10 +95,10 @@ export const useSchoolStore = defineStore("schoolStore", () => {
             });
         }
     }
-    async function deleteStudent(student: Student) {
+    async function deleteStudent(student: StudentDto) {
         console.log("delete", student);
     }
-    async function createStudent(student: Student): Promise<Student | null> {
+    async function createStudent(student: StudentDto): Promise<StudentDto | null> {
         try {
             const res = await $apiFetch("/api/protected/students", {
                 method: "POST",
@@ -112,7 +112,7 @@ export const useSchoolStore = defineStore("schoolStore", () => {
                 );
             }
             const data = res.data;
-            return new Student(data?.student);
+            return new StudentDto(data?.student);
         } catch (err: any) {
             addNotification({
                 title: "Update Error",
@@ -163,8 +163,9 @@ export const useSchoolStore = defineStore("schoolStore", () => {
     async function fetchClasses() {
         classes.value = await classApi.fetchClasses();
     }
-    async function createClass() {
-        console.log("Creating class with data:");
+    async function createClass(payload: CreateClassModelDto) {
+        console.log("Creating class with data:", payload);
+        classes.value = await classApi.createClass(payload);
     }
     async function editClass(updatedClass: ClassDto) {
         classes.value = await classApi.editClass(updatedClass);
@@ -182,7 +183,7 @@ export const useSchoolStore = defineStore("schoolStore", () => {
         await fetchTeachers();
     }
 
-    function getAvailableStudentsForClass(classId: string): Student[] {
+    function getAvailableStudentsForClass(classId: string): StudentDto[] {
         const cls = classes.value.find((c) => c.id === classId);
         if (!cls) return students.value;
         const assignedStudentIds = new Set(cls.students.map((s) => s.id));

@@ -15,7 +15,8 @@ onMounted(async () => {
             <p class="font-bold text-xl">Class</p>
             <ClassCreateButton
                 :teachers="schoolStore.teachers"
-                :onCreateClass="schoolStore.createClass"
+                :handleCreateClass="schoolStore.createClass"
+                :allStudents="schoolStore.students"
             />
         </div>
         <div class="p-2 flex flex-wrap">

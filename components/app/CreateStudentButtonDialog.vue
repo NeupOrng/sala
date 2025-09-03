@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Student, type IStudent } from "~/store/model/student";
+import { StudentDto, type IStudentDto } from "~/model/student";
 import { Button } from "../ui/button";
 import {
     Dialog,
@@ -20,13 +20,13 @@ import {
 
 const props = defineProps<{
     onUploadImage: (file: File, studentId: string) => Promise<string>;
-    onCreateStudent: (student: Student) => Promise<Student | null>;
+    onCreateStudent: (student: StudentDto) => Promise<StudentDto | null>;
 }>();
 
 const isOpen = ref(false);
 const isCreatedStudent = ref(false);
 const imageLoading = ref(false);
-const studentModel = reactive<IStudent>({
+const studentModel = reactive<IStudentDto>({
     id: "",
     firstName: "",
     middleName: "",
@@ -58,7 +58,7 @@ const handleOpen = () => {
 };
 
 const handleSave = async () => {
-    const student = await props.onCreateStudent(new Student(studentModel));
+    const student = await props.onCreateStudent(new StudentDto(studentModel));
     if (student) {
         studentModel.id = student.id;
         studentModel.studentIdNumber = student.studentIdNumber;

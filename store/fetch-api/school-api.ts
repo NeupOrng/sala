@@ -1,4 +1,4 @@
-import type { ISchool } from "../model/school";
+import type { ISchool } from "../../model/school";
 
 export interface IUseSchoolApi {
     fetchSchool: () => Promise<ISchool>

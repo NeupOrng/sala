@@ -26,18 +26,18 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { ClassDto } from "~/store/model/class";
+import { ClassDto } from "~/model/class";
 import {
     StudentModel,
     type IStudentModel,
-    type Student,
-} from "~/store/model/student";
-import type { TeacherDto } from "~/store/model/teacher";
+    type StudentDto,
+} from "~/model/student";
+import type { TeacherDto } from "~/model/teacher";
 
 const props = defineProps<{
     classItem: ClassDto;
     onSaveClass: (updatedClass: ClassDto) => Promise<void>;
-    availableStudent: Student[];
+    availableStudent: StudentDto[];
     teachers: TeacherDto[];
 }>();
 
@@ -208,7 +208,6 @@ const handleAddStudents = (studentIds: IStudentModel[]) => {
                         <ClassSelectStudentTable
                             v-if="isEditing"
                             :disabled="isLoading"
-                            :classItem="classItem"
                             :availableStudent="availableStudent"
                             @add-students="handleAddStudents"
                         />

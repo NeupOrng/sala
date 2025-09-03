@@ -1,8 +1,9 @@
-import { ClassDto } from "../model/class";
+import { ClassDto, CreateClassModelDto } from "../../model/class";
 
 export interface IUseClassApi {
     fetchClasses: () => Promise<ClassDto[]>;
     editClass: (updatedClass: ClassDto) => Promise<ClassDto[]>;
+    createClass: (payload: CreateClassModelDto) => Promise<ClassDto[]>
 }
 
 const useClassApi = (): IUseClassApi => {
@@ -65,9 +66,41 @@ const useClassApi = (): IUseClassApi => {
         return await fetchClasses();
     };
 
+    const createClass = async (payload: CreateClassModelDto): Promise<ClassDto[]> => {
+        try {
+            console.log("API editclass: ", payload)
+            const res = await $apiFetch("/api/protected/classes", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: payload.toCreateClassRequestString,
+            });
+            if (res.statusCode !== 201) {
+                throw new Error(
+                    res.statusMessage || "Failed to create student"
+                );
+            }
+            addNotification({
+                title: "Success",
+                description: "Class Created Successfully",
+                type: "default",
+                duration: 4000,
+            });
+        } catch (err: any) {
+            addNotification({
+                title: "Error",
+                description: err.message || "Unknown error",
+                type: "destructive",
+                duration: 4000,
+            });
+        }
+        return await fetchClasses();
+    }
+
     return {
         fetchClasses,
-        editClass
+        editClass,
+        createClass,
     };
 };
 
