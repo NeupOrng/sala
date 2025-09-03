@@ -18,7 +18,7 @@ onMounted(async () => {
                 :onCreateClass="schoolStore.createClass"
             />
         </div>
-        <div class="p-4 grid grid-cols-4 gap-4">
+        <div class="p-2 flex flex-wrap">
             <ClassDisplayItem
                 v-for="item in classes"
                 :key="item.id"

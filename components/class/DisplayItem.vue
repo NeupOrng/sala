@@ -44,7 +44,7 @@ const props = defineProps<{
 const isDialogOpen = ref(false);
 const isEditing = ref(false);
 const isLoading = ref(false);
-const classModel = ref<ClassDto>(_.clone(props.classItem));
+const classModel = ref<ClassDto>(_.cloneDeep(props.classItem));
 const studentsModel = ref<IStudentModel[]>(
     props.classItem.students.map((student) => ({
         ...student,
@@ -64,12 +64,17 @@ const onEditingToggle = () => {
 };
 
 const onCancel = () => {
-    studentsModel.value = [];
+    studentsModel.value = props.classItem.students.map((student) => ({
+        ...student,
+        isSelected: false,
+        isNewStudent: false,
+    }));
     isDialogOpen.value = false;
 };
 
 const onSaveEditedClass = async () => {
     isLoading.value = true;
+    console.log("OnSave ClassModel", classModel.value);
     classModel.value.students = studentsModel.value.map((std) => {
         const studentModel = new StudentModel(std);
         return studentModel.studentDto;
@@ -106,11 +111,11 @@ const handleAddStudents = (studentIds: IStudentModel[]) => {
     <Dialog v-model:open="isDialogOpen">
         <DialogTrigger as-child>
             <Card
-                class="w-64 m-2 cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100"
+                class="w-[24rem] m-1 cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100"
             >
                 <CardHeader class="pb-2">
                     <CardTitle
-                        class="text-xl font-semibold text-gray-800 truncate"
+                        class="text-lg font-semibold text-gray-800 truncate"
                         >{{ classItem.name }}</CardTitle
                     >
                     <p class="text-xs text-gray-500">
@@ -142,7 +147,8 @@ const handleAddStudents = (studentIds: IStudentModel[]) => {
         <DialogContent class="w-[1100px] max-h-[85vh] overflow-y-auto">
             <DialogHeader>
                 <DialogTitle class="text-xl font-semibold text-gray-800">
-                    <span>{{ classItem.name }}</span>
+                    <span v-if="isEditing">Edit Class</span>
+                    <span v-else>Class Details</span>
                     <div class="mt-2 h-1 w-16 bg-blue-500 rounded"></div>
                 </DialogTitle>
             </DialogHeader>
@@ -150,10 +156,10 @@ const handleAddStudents = (studentIds: IStudentModel[]) => {
                 <div class="flex flex-row justify-between gap-6">
                     <div>
                         <h3 class="font-semibold text-lg text-gray-700">
-                            Description
+                            Name
                         </h3>
                         <p class="text-sm text-gray-600 italic pl-2">
-                            {{ classItem.description }}
+                            {{ classItem.name }}
                         </p>
                     </div>
                     <div class="text-left w-fit px-5">
@@ -181,6 +187,16 @@ const handleAddStudents = (studentIds: IStudentModel[]) => {
                                 {{ classItem.teacher.fullName }}
                             </p>
                         </div>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <h3 class="font-semibold text-lg text-gray-700">
+                            Description
+                        </h3>
+                        <p class="text-sm text-gray-600 italic pl-2">
+                            {{ classItem.description }}
+                        </p>
                     </div>
                 </div>
                 <div>

@@ -4,7 +4,7 @@ import redis from "~/server/utils/redis";
 export default defineEventHandler(async (event) => {
     try {
         const path = event.path;
-        console.log("[Auth Middleware] Running auth middleware: ", path);
+        console.log("[Auth Middleware] Running auth middleware: ", event.method, path);
         if (path.startsWith("/api/protected")) {
             const token = getCookie(event, "token");
             if (token) {

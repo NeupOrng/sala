@@ -46,6 +46,7 @@ export default defineEventHandler(async (event) => {
             .returning();
 
         if (requestDto.hasTeacher) {
+            console.log("[Has Teacher]", requestDto)
             const [teacher] = await txn
                 .select()
                 .from(Teachers)
@@ -71,7 +72,7 @@ export default defineEventHandler(async (event) => {
                     )
                 )
                 .limit(1);
-
+            console.log("[Class Assign]", classAssign)
             if (!classAssign) {
                 await txn.insert(ClassAssignments).values({
                     classId: requestDto.classId,

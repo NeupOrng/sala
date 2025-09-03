@@ -5,7 +5,7 @@ import {
     ClassAssignments,
     Teachers,
 } from "~/server/schema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, desc } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
     const user = event.context.user;
@@ -27,12 +27,24 @@ export default defineEventHandler(async (event) => {
             student: Students,
         })
         .from(Classes)
-        .leftJoin(Enrollments, eq(Classes.id, Enrollments.classId))
+        .leftJoin(
+            Enrollments,
+            and(
+                eq(Classes.id, Enrollments.classId),
+                eq(Enrollments.status, "active")
+            )
+        )
         .leftJoin(Students, eq(Enrollments.studentId, Students.id))
-        .leftJoin(ClassAssignments, eq(ClassAssignments.classId, Classes.id))
+        .leftJoin(
+            ClassAssignments,
+            and(
+                eq(ClassAssignments.classId, Classes.id),
+                eq(ClassAssignments.status, "active")
+            )
+        )
         .leftJoin(Teachers, eq(ClassAssignments.teacherId, Teachers.id))
         .where(eq(Classes.schoolId, schoolId))
-        .orderBy(Classes.name);
+        .orderBy(desc(Classes.createdAt));
 
     const formattedClasses: Record<string, any> = classes.reduce(
         (acc, curr) => {

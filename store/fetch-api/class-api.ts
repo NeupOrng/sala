@@ -36,6 +36,7 @@ const useClassApi = (): IUseClassApi => {
 
     const editClass = async (updatedClass: ClassDto): Promise<ClassDto[]> => {
         try {
+            console.log("API editclass: ", updatedClass)
             const res = await $apiFetch("/api/protected/classes", {
                 method: "PUT",
                 credentials: "include",
