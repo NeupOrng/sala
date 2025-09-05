@@ -8,12 +8,12 @@ const computedStudents = computed(() => schoolStore.students);
     <ClientOnly>
         <div class="py-2 px-4 flex justify-between items-center">
             <p class="font-bold text-xl">Students</p>
-            <AppCreateStudentButtonDialog 
+            <StudentCreateButtonDialog 
                 :onCreateStudent="schoolStore.createStudent"
                 :onUploadImage="schoolStore.uploadImage"
             />
         </div>
-        <AppStudentTable
+        <StudentTable
             :students="computedStudents"
             :onSaveStudent="schoolStore.editStudent"
             :onDeleteStudent="schoolStore.deleteStudent"

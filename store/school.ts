@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import type { ISchool } from "../model/school";
 import type { IGenderCount } from "~/model/general/gender-count";
-import { StudentDto } from "../model/student";
+import { CreateStudentModel, StudentDto } from "../model/student";
 import { ClassDto, CreateClassModelDto } from "../model/class";
 import useClassApi from "./fetch-api/class-api";
 import useSchoolApi from "./fetch-api/school-api";
@@ -98,13 +98,13 @@ export const useSchoolStore = defineStore("schoolStore", () => {
     async function deleteStudent(student: StudentDto) {
         console.log("delete", student);
     }
-    async function createStudent(student: StudentDto): Promise<StudentDto | null> {
+    async function createStudent(student: CreateStudentModel): Promise<StudentDto | null> {
         try {
             const res = await $apiFetch("/api/protected/students", {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: student.toRequestString,
+                body: student.requestString,
             });
             if (res.statusCode !== 201) {
                 throw new Error(

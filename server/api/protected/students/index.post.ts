@@ -24,10 +24,7 @@ export default defineEventHandler(async (event) => {
         .where(eq(Schools.id, user.schoolId))
         .limit(1);
     if (!school) {
-        return {
-            statusCode: 400,
-            statusMessage: "Invalid schoolId",
-        };
+        return badRequest("Invalid schoolId")
     }
 
     const newStudentId = await generatedStudentId(school.shortName ?? "SALA");

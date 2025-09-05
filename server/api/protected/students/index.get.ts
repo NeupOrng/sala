@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
             phoneNumber: Students.phoneNumber,
             academicYear: Students.academicYear,
             photoUrl: Students.photoUrl,
-            guardians: {
+            guardian: {
                 id: Guardians.id,
                 firstaName: Guardians.firstName,
                 middleName: Guardians.middleName,
@@ -36,8 +36,8 @@ export default defineEventHandler(async (event) => {
             },
             school: {
                 id: Schools.id,
-                name: Schools.name, 
-            }
+                name: Schools.name,
+            },
         })
         .from(Students)
         .leftJoin(Schools, eq(Students.schoolId, Schools.id))
@@ -47,6 +47,19 @@ export default defineEventHandler(async (event) => {
         );
 
     return ok({
-        students: students
+        students: Object.values(students.reduce((acc: Record<string, any>, cur) => {
+            if (!acc[cur.id]) {
+                acc[cur.id] = { ...cur, guardians: [] };
+                if (cur.guardian !== null && cur.guardian !== undefined) {
+                    acc[cur.id].guardians.push(cur.guardian);
+                }
+                delete acc[cur.id].guardian;
+            } else {
+                if (cur.guardian !== null && cur.guardian !== undefined) {
+                    acc[cur.id].guardians.push(cur.guardian);
+                }
+            }
+            return acc;
+        }, {})),
     });
 });
