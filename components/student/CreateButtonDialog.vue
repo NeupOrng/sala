@@ -28,7 +28,7 @@ import { useFieldArray } from "vee-validate";
 const props = defineProps<{
     onUploadImage: (file: File, studentId: string) => Promise<string>;
     onCreateStudent: (
-        student: ICreateStudentModel
+        student: CreateStudentModel
     ) => Promise<StudentDto | null>;
 }>();
 
@@ -41,8 +41,11 @@ const handleOpen = () => {
     isOpen.value = true;
 };
 
-const handleSave = studentModel.value.formContext.handleSubmit(async () => {
-    const student = await props.onCreateStudent(studentModel.value);
+const handleSave = studentModel.value.formContext.handleSubmit(async (value) => {
+    console.log("handleSave", value)
+    const createStudentModel = new CreateStudentModel();
+    createStudentModel.values = value;
+    const student = await props.onCreateStudent(createStudentModel);
     if (student) {
         isCreatedStudent.value = true;
     }
@@ -58,25 +61,6 @@ const handleClose = () => {
     isOpen.value = false;
 };
 
-const dateOfBirthString = computed({
-    get() {
-        if (!studentModel.value.dateOfBirth) return "";
-        const d = studentModel.value.dateOfBirth;
-        if (typeof d === "string") {
-            const str = d as string;
-            return str.length >= 10 ? str.slice(0, 10) : "";
-        }
-        return d instanceof Date && !isNaN(d.getTime())
-            ? d.toISOString().slice(0, 10)
-            : "";
-    },
-    set(val: string) {
-        if (studentModel) {
-            studentModel.value.dateOfBirth = val ? new Date(val) : new Date("");
-        }
-    },
-});
-
 const onAddGuardian = () => {
     push({
         firstName: "",
@@ -88,17 +72,17 @@ const onAddGuardian = () => {
         isPrimary: false,
     });
 };
-const handleImageChange = async (event: Event) => {
-    const target = event.target as HTMLInputElement;
-    const file = target.files && target.files[0];
-    if (file) {
-        const url = await props.onUploadImage(
-            file,
-            studentModel.value.firstName
-        );
-        studentModel.value.photoUrl = url + "?t=" + Date.now();
-    }
-};
+// const handleImageChange = async (event: Event) => {
+//     const target = event.target as HTMLInputElement;
+//     const file = target.files && target.files[0];
+//     if (file) {
+//         const url = await props.onUploadImage(
+//             file,
+//             studentModel.value.firstName
+//         );
+//         studentModel.value.photoUrl = url + "?t=" + Date.now();
+//     }
+// };
 
 watch(isOpen, (newVal) => {
     if (!newVal) {
@@ -128,7 +112,7 @@ watch(isOpen, (newVal) => {
                         for="student-image-upload"
                         class="cursor-pointer group"
                     >
-                        <img
+                        <!-- <img
                             :src="studentModel.photoUrl"
                             alt="Student Image"
                             @load="imageLoading = false"
@@ -137,14 +121,14 @@ watch(isOpen, (newVal) => {
                                 visibility: imageLoading ? 'hidden' : 'visible',
                             }"
                             class="w-64 h-64 object-cover rounded-full border border-gray-200 group-hover:opacity-80 transition"
-                        />
-                        <input
+                        /> -->
+                        <!-- <input
                             id="student-image-upload"
                             type="file"
                             accept="image/*"
                             class="hidden"
                             @change="handleImageChange"
-                        />
+                        /> -->
                     </Label>
                     <span class="text-xs text-muted-foreground mt-2"
                         >Click image to upload</span
@@ -152,7 +136,7 @@ watch(isOpen, (newVal) => {
                 </div>
                 <form
                     v-else
-                    @submit="test"
+                    @submit="handleSave"
                     class="flex flex-col justify-start flex-1 gap-6 pt-2 px-1"
                 >
                     <div class="flex gap-2 items-start">
@@ -266,7 +250,7 @@ watch(isOpen, (newVal) => {
                                 type="button"
                                 @click="onAddGuardian"
                                 variant="default"
-                                class="px-4 py-2"
+                                class="px-4 py-2" 
                             >
                                 + Add Guardian
                             </Button>
@@ -420,7 +404,7 @@ watch(isOpen, (newVal) => {
                                 </FormField>
 
                                 <FormField
-                                    :name="`guardians[${index}].relationship`"
+                                    :name="`guardians[${index}].relationshipToStudent`"
                                     v-slot="{ componentField }"
                                 >
                                     <FormItem>
@@ -461,14 +445,16 @@ watch(isOpen, (newVal) => {
                                 </FormField>
                                 <FormField
                                     :name="`guardians[${index}].isPrimary`"
-                                    v-slot="{ componentField }"
+                                    v-slot="{ value, handleChange }" 
+                                    type="checkbox"
                                 >
                                     <FormItem
                                         class="flex items-center space-y-0"
                                     >
                                         <FormControl>
                                             <Checkbox
-                                                v-bind="componentField"
+                                                :model-value="value"
+                                                @update:model-value="handleChange"
                                                 class="mr-2"
                                                 aria-label="Mark as primary guardian"
                                             />

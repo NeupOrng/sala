@@ -129,13 +129,11 @@ export interface ICreateStudentModel {
     firstName: string;
     middleName: string;
     lastName: string;
-    studentIdNumber: string;
     email: string;
     nationality: string;
     gender: string;
-    dateOfBirth: Date;
+    dateOfBirth: string;
     phone: string;
-    photoUrl: string;
     guardians: ICreateGuardianModel[];
 }
 
@@ -143,26 +141,22 @@ export class CreateStudentModel implements ICreateStudentModel {
     firstName: string;
     middleName: string;
     lastName: string;
-    studentIdNumber: string;
     email: string;
     nationality: string;
     gender: string;
-    dateOfBirth: Date;
+    dateOfBirth: string;
     phone: string;
-    photoUrl: string;
     guardians: CreateGuardianModel[];
 
     constructor() {
         this.firstName = "";
         this.middleName = "";
         this.lastName = "";
-        this.studentIdNumber = "";
         this.email = "";
         this.nationality = "";
         this.gender = "";
-        this.dateOfBirth = new Date();
+        this.dateOfBirth = (new Date()).toString();
         this.phone = "";
-        this.photoUrl = "";
         this.guardians = [];
     }
 
@@ -180,7 +174,7 @@ export class CreateStudentModel implements ICreateStudentModel {
             relationshipToStudent: z
                 .string()
                 .nonempty("Relationship to student is required"),
-            isPrimary: z.boolean(),
+            isPrimary: z.boolean().default(false).optional(),
         });
 
         const formSchema = toTypedSchema(
@@ -194,20 +188,13 @@ export class CreateStudentModel implements ICreateStudentModel {
                     .max(13, "Phone number must be no more than 13 digits")
                     .optional(),
                 email: z.string().email().optional(),
-                studentIdNumber: z
-                    .string()
-                    .min(5, "Student Id must be at least 5 digits")
-                    .max(24, "Student Id must be no more than 24 digits")
-                    .optional(),
                 nationality: z.string().nonempty(),
                 gender: z.string().nonempty(),
-                dateOfBirth: z
-                    .date()
+                dateOfBirth: z.string()
                     .refine((date) => new Date(date) >= new Date("1900-01-01"), {
                         message: "Date of birth must be after January 1, 1900",
                     }),
-                photoUrl: z.string().optional(),
-                guardians: z.array(guardianSchema).optional(),
+                guardians: z.array(guardianSchema).default([]).optional(),
             })
         );
         return useForm<ICreateStudentModel>({
@@ -216,19 +203,34 @@ export class CreateStudentModel implements ICreateStudentModel {
                 firstName: "",
                 middleName: "",
                 lastName: "",
-                studentIdNumber: "",
                 email: "",
                 nationality: "",
                 gender: "",
-                dateOfBirth: new Date(),
+                dateOfBirth: (new Date()).toString(),
                 phone: "",
-                photoUrl: "",
                 guardians: [],
             },
         });
     }
 
+    set values(json: any) {
+        this.firstName = json.firstName ?? "";
+        this.middleName = json.middleName ?? "";
+        this.lastName = json.lastName ?? "";
+        this.email = json.email ?? "";
+        this.nationality = json.nationality ?? "";
+        this.gender = json.gender ?? "";
+        this.dateOfBirth = (new Date()).toString();
+        this.phone = json.phone ?? "";
+        this.guardians = (json.guardians ?? []).map((guardianJson: any) => {
+            const createGuardianModel = new CreateGuardianModel();
+            createGuardianModel.values = guardianJson;
+            return createGuardianModel;
+        });
+    }
+
     get requestString(): string {
+        console.table(this)
         const req = {
             firstName: this.firstName,
             middleName: this.middleName === "" ? null : this.middleName,
@@ -236,10 +238,9 @@ export class CreateStudentModel implements ICreateStudentModel {
             gender: this.gender,
             email: this.email,
             nationality: this.nationality,
-            dateOfBirth: this.dateOfBirth.toLocaleDateString("en-CA"),
+            dateOfBirth: new Date(this.dateOfBirth).toLocaleDateString("en-CA"),
             phoneNumber: this.phone,
             guardian: this.guardians.map((guardian) => guardian.jsonRequest),
-            photoUrl: this.photoUrl,
         };
         return JSON.stringify(req);
     }

@@ -108,4 +108,14 @@ export class CreateGuardianModel implements ICreateGuardianModel {
         };
         return json;
     }
+
+    set values(json: any) {
+        this.firstName = json.firstName ?? "";
+        this.middleName = json.middleName ?? "";
+        this.lastName = json.lastName ?? "";
+        this.phone = json.phone ?? "";
+        this.email = json.email ?? "";
+        this.relationshipToStudent = json.relationshipToStudent ?? "";
+        this.isPrimary = json.isPrimary ?? false;
+    }
 }
