@@ -48,7 +48,9 @@ export const useProfileStore = defineStore("profiileStore", {
             }
         },
 
-        async login(request: ILoginModel): Promise<boolean> {
+        async login(
+            request: ILoginModel
+        ): Promise<{ isSuccess: boolean; message: string }> {
             try {
                 const response = await $fetch("/api/auth/sign-in", {
                     method: "POST",
@@ -62,15 +64,32 @@ export const useProfileStore = defineStore("profiileStore", {
                     this.isAuthorized = true;
                     this.username = request.username;
                     this.role = "user";
-                    return true;
+                    return {
+                        isSuccess: true,
+                        message: "Login Succes",
+                    };
                 } else {
                     this.isAuthorized = false;
-                    return false;
+                    return {
+                        isSuccess: false,
+                        message: response.statusMessage,
+                    };
                 }
             } catch (error) {
-                console.error("Login failed:", error);
                 this.isAuthorized = false;
-                return false;
+                if (error instanceof Error) {
+                    console.error("Login failed:", error.toString());
+                    return {
+                        isSuccess: false,
+                        message: error.toString(),
+                    };
+                } else {
+                    console.error("Login failed:", String(error));
+                    return {
+                        isSuccess: false,
+                        message: String(error),
+                    };
+                }
             }
         },
     },

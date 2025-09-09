@@ -92,6 +92,10 @@ export class CreateGuardianModel implements ICreateGuardianModel {
         });
     }
 
+    validate() {
+        this.formContext.validate();
+    }
+
     get jsonRequest() {
         const json = {
             firstName: this.firstName,

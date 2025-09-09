@@ -20,8 +20,8 @@ const formContext = loginModelObj.getForm();
 
 const onSubmit = formContext.handleSubmit(async (values) => {
     try {
-        const success = await profileStore.login(values); // assuming you have a login action
-        if (success) {
+        const result = await profileStore.login(values); // assuming you have a login action
+        if (result.isSuccess) {
             addNotification({
                 title: "Login Success",
                 description: "Login success successfully",
@@ -31,8 +31,8 @@ const onSubmit = formContext.handleSubmit(async (values) => {
             navigateTo('/');
         } else {
             addNotification({
-                title: "Login Success",
-                description: "Login success successfully",
+                title: "Login Fail",
+                description: result.message,
                 type: "destructive",
                 duration: 4000,
             })
