@@ -1,14 +1,12 @@
 import { relations } from 'drizzle-orm';
 import { Students } from './students';
 import { Enrollments } from './enrollment';
-import { Scores } from './score';
 import { Classes } from './class';
 import { Schools } from './schools';
-import { Assignments } from './assignment';
 import { Guardians } from './guardians';
 import { Users } from './user';
 import { Teachers } from './teacher';
-import { ClassAssignments } from './class-assignment';
+import { ClassTeacherAssignments } from './class-teacher-assignment';
 
 export { Schools } from './schools';
 export { Students } from './students';
@@ -18,22 +16,18 @@ export { GenderEnum } from './gender';
 export { Users } from './user'
 export { Classes } from './class';
 export { Enrollments } from './enrollment';
-export { Assignments } from './assignment';
-export { Scores } from './score';
 export { Teachers } from './teacher';
-export { ClassAssignments } from './class-assignment';
+export { ClassTeacherAssignments } from './class-teacher-assignment';
 
 export const studentsRelations = relations(Students, ({ many }) => ({
   enrollments: many(Enrollments),
-  scores: many(Scores),
 }));
 export const classesRelations = relations(Classes, ({ one, many }) => ({
   school: one(Schools, {
     fields: [Classes.schoolId],
     references: [Schools.id],
   }),
-  enrollments: many(Enrollments),
-  assignments: many(Assignments),
+  enrollments: many(Enrollments)
 }));
 
 export const enrollmentsRelations = relations(Enrollments, ({ one }) => ({
@@ -44,25 +38,6 @@ export const enrollmentsRelations = relations(Enrollments, ({ one }) => ({
   class: one(Classes, {
     fields: [Enrollments.classId],
     references: [Classes.id],
-  }),
-}));
-
-export const assignmentsRelations = relations(Assignments, ({ one, many }) => ({
-  class: one(Classes, {
-    fields: [Assignments.classId],
-    references: [Classes.id],
-  }),
-  scores: many(Scores),
-}));
-
-export const scoresRelations = relations(Scores, ({ one }) => ({
-  student: one(Students, {
-    fields: [Scores.studentId],
-    references: [Students.id],
-  }),
-  assignment: one(Assignments, {
-    fields: [Scores.assignmentId],
-    references: [Assignments.id],
   }),
 }));
 
@@ -85,5 +60,5 @@ export const teacherUserRelations = relations(Teachers, ({ one }) => ({
 })); 
 
 export const teacherClassAssignmentsRelations = relations(Teachers, ({ many }) => ({
-    classAssignments: many(ClassAssignments),
+    classTeacherAssignments: many(ClassTeacherAssignments),
 }));

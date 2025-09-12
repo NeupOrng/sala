@@ -1,6 +1,6 @@
 import { CreateClassRequestDto } from "~/server/dto/request/class";
 import {
-    ClassAssignments,
+    ClassTeacherAssignments,
     Classes,
     Schools,
     Students,
@@ -47,7 +47,7 @@ const createClass = async (
             .returning();
         const classObj: any = { ...newClass };
         if (request.hasTeacher) {
-            const classAssignmentsValue: typeof ClassAssignments.$inferInsert =
+            const classTeacherAssignmentsValue: typeof ClassTeacherAssignments.$inferInsert =
                 {
                     classId: newClass.id,
                     teacherId: request.safeTeacherId,
@@ -69,8 +69,8 @@ const createClass = async (
                 throw new Error("Multiple teachers found with the same ID");
             }
             await txn
-                .insert(ClassAssignments)
-                .values(classAssignmentsValue);
+                .insert(ClassTeacherAssignments)
+                .values(classTeacherAssignmentsValue);
             classObj["teacher"] = teacher;
         }
         if (request.hasStudents) {

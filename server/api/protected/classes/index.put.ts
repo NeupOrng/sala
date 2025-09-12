@@ -3,7 +3,7 @@ import { EditClassRequestDto } from "~/server/dto/request/class";
 import { getSchoolById, getClassById } from "~/server/repository/school";
 import { db } from "~/server/utils/db";
 import {
-    ClassAssignments,
+    ClassTeacherAssignments,
     Classes,
     Enrollments,
     Schools,
@@ -64,34 +64,34 @@ export default defineEventHandler(async (event) => {
 
             const [classAssign] = await txn
                 .select()
-                .from(ClassAssignments)
+                .from(ClassTeacherAssignments)
                 .where(
                     and(
-                        eq(ClassAssignments.classId, requestDto.classId),
-                        eq(ClassAssignments.status, "active")
+                        eq(ClassTeacherAssignments.classId, requestDto.classId),
+                        eq(ClassTeacherAssignments.status, "active")
                     )
                 )
                 .limit(1);
             console.log("[Class Assign]", classAssign)
             if (!classAssign) {
-                await txn.insert(ClassAssignments).values({
+                await txn.insert(ClassTeacherAssignments).values({
                     classId: requestDto.classId,
                     teacherId: teacher.id,
                 });
             } else if (classAssign.teacherId !== teacher.id) {
                 await txn
-                    .update(ClassAssignments)
+                    .update(ClassTeacherAssignments)
                     .set({
                         status: "deleted",
                         updatedAt: new Date(),
                     })
                     .where(
                         and(
-                            eq(ClassAssignments.classId, classObj.id),
-                            eq(ClassAssignments.status, "active")
+                            eq(ClassTeacherAssignments.classId, classObj.id),
+                            eq(ClassTeacherAssignments.status, "active")
                         )
                     );
-                await txn.insert(ClassAssignments).values({
+                await txn.insert(ClassTeacherAssignments).values({
                     classId: requestDto.classId,
                     teacherId: teacher.id,
                 });

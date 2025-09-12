@@ -2,7 +2,7 @@ import {
     Classes,
     Enrollments,
     Students,
-    ClassAssignments,
+    ClassTeacherAssignments,
     Teachers,
 } from "~/server/schema";
 import { and, eq, desc } from "drizzle-orm";
@@ -36,13 +36,13 @@ export default defineEventHandler(async (event) => {
         )
         .leftJoin(Students, eq(Enrollments.studentId, Students.id))
         .leftJoin(
-            ClassAssignments,
+            ClassTeacherAssignments,
             and(
-                eq(ClassAssignments.classId, Classes.id),
-                eq(ClassAssignments.status, "active")
+                eq(ClassTeacherAssignments.classId, Classes.id),
+                eq(ClassTeacherAssignments.status, "active")
             )
         )
-        .leftJoin(Teachers, eq(ClassAssignments.teacherId, Teachers.id))
+        .leftJoin(Teachers, eq(ClassTeacherAssignments.teacherId, Teachers.id))
         .where(eq(Classes.schoolId, schoolId))
         .orderBy(desc(Classes.createdAt));
 

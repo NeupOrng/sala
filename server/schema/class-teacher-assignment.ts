@@ -3,7 +3,7 @@ import { Classes } from "./class";
 import { Teachers } from "./teacher";
 import { StatusEnum } from "./status";
 
-export const ClassAssignments = pgTable("class_assignments", {
+export const ClassTeacherAssignments = pgTable("class_teacher_assignments", {
     id: uuid("id").primaryKey().defaultRandom(),
     teacherId: uuid("teacher_id").references(() => Teachers.id).notNull(),
     classId: uuid("class_id").references(() => Classes.id).notNull(),
