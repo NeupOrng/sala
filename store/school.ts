@@ -176,11 +176,13 @@ export const useSchoolStore = defineStore("schoolStore", () => {
     }
 
     async function initialize() {
-        await fetchSchool();
-        await fetchOnLoad();
-        await fetchStudents();
-        await fetchClasses();
-        await fetchTeachers();
+        await Promise.all([
+            fetchSchool(),
+            fetchOnLoad(),
+            fetchStudents(),
+            fetchClasses(),
+            fetchTeachers(),
+        ]);
     }
 
     function getAvailableStudentsForClass(classId: string): StudentDto[] {

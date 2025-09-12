@@ -18,6 +18,7 @@ export { Classes } from './class';
 export { Enrollments } from './enrollment';
 export { Teachers } from './teacher';
 export { ClassTeacherAssignments } from './class-teacher-assignment';
+export { Quizzes, QuizStatusEnum } from './quizzes';
 
 export const studentsRelations = relations(Students, ({ many }) => ({
   enrollments: many(Enrollments),
