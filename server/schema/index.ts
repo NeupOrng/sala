@@ -7,6 +7,7 @@ import { Guardians } from './guardians';
 import { Users } from './user';
 import { Teachers } from './teacher';
 import { ClassTeacherAssignments } from './class-teacher-assignment';
+import { Quizzes, QuizzQuestions } from './quizzes';
 
 export { Schools } from './schools';
 export { Students } from './students';
@@ -18,7 +19,7 @@ export { Classes } from './class';
 export { Enrollments } from './enrollment';
 export { Teachers } from './teacher';
 export { ClassTeacherAssignments } from './class-teacher-assignment';
-export { Quizzes, QuizStatusEnum } from './quizzes';
+export { Quizzes, QuizStatusEnum, QuestionTypeEnum, QuizzQuestions } from './quizzes';
 
 export const studentsRelations = relations(Students, ({ many }) => ({
   enrollments: many(Enrollments),
@@ -63,3 +64,11 @@ export const teacherUserRelations = relations(Teachers, ({ one }) => ({
 export const teacherClassAssignmentsRelations = relations(Teachers, ({ many }) => ({
     classTeacherAssignments: many(ClassTeacherAssignments),
 }));
+
+export const quizzQuestionRelations = relations(Quizzes, ({ many }) => ({
+    question: many(QuizzQuestions)
+}))
+
+export const classQuizRelations = relations(Classes, ({ many }) => ({
+    quizzes: many(Quizzes)
+}))
