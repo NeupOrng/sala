@@ -5,8 +5,10 @@ const classes = computed(() => {
     return schoolStore.currentClasses;
 });
 onMounted(async () => {
-    await schoolStore.fetchClasses();
-    await schoolStore.fetchTeachers();
+    await Promise.all([
+        schoolStore.fetchClasses(),
+        schoolStore.fetchTeachers(),
+    ]);
 });
 </script>
 <template>
@@ -26,7 +28,9 @@ onMounted(async () => {
                 :classItem="item"
                 :students="schoolStore.students"
                 :onSaveClass="schoolStore.editClass"
-                :availableStudent="schoolStore.getAvailableStudentsForClass(item.id)"
+                :availableStudent="
+                    schoolStore.getAvailableStudentsForClass(item.id)
+                "
                 :teachers="schoolStore.teachers"
             />
         </div>

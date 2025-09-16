@@ -17,7 +17,7 @@ export const QuestionTypeEnum = pgEnum("question_type", [
     "true_false",
     "open_ended",
 ]);
-export const QuizStatusEnum = pgEnum("quiz_status", ["draft", "published"]);
+export const QuizStatusEnum = pgEnum("quiz_status", ["draft", "published", "closed", "deleted"]);
 
 export const Quizzes = pgTable("quizzes", {
     quizId: uuid("quiz_id").defaultRandom().primaryKey(),
@@ -26,7 +26,7 @@ export const Quizzes = pgTable("quizzes", {
     classId: uuid("class_id")
         .references(() => Classes.id, { onDelete: "cascade" })
         .notNull(),
-    teacherId: uuid("creator_id")
+    teacherId: uuid("teacher_id")
         .references(() => Teachers.id, { onDelete: "cascade" })
         .notNull(), // References Teacher.teacherId (UUID)
     status: QuizStatusEnum("status").default("draft").notNull(),

@@ -3,6 +3,10 @@ import { useSchoolStore } from "~/store/school";
 
 const schoolStore = useSchoolStore();
 const computedStudents = computed(() => schoolStore.students);
+
+onMounted(async () => {
+    await schoolStore.fetchStudents();
+})
 </script>
 <template>
     <ClientOnly>

@@ -72,3 +72,7 @@ export const quizzQuestionRelations = relations(Quizzes, ({ many }) => ({
 export const classQuizRelations = relations(Classes, ({ many }) => ({
     quizzes: many(Quizzes)
 }))
+
+export const teacherQuizRelations = relations(Teachers, ({ many }) => ({
+    quizzes: many(Quizzes)
+}))

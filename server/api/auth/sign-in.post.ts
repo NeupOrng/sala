@@ -1,6 +1,6 @@
 import { compare, hash } from "bcrypt";
 import jwt from "jsonwebtoken";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { Users } from "~/server/schema/user";
 import { db } from "~/server/utils/db";
 import redis from "~/server/utils/redis";
@@ -8,6 +8,8 @@ import { RedisKey } from "~/server/dto/constant/redis-key";
 import { forbidden } from "~/server/utils/response/error-helpers";
 import { ok } from "~/server/utils/response/success-helper";
 import { JWT_SECRET } from "~/server/dto/constant/env";
+import { Teachers } from "~/server/schema";
+import { first } from "lodash";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
@@ -37,12 +39,38 @@ export default defineEventHandler(async (event) => {
         maxAge: 60 * 60 * 24 * 7, // 7 days
     });
 
-    const { passwordHash, ...safeUser } = user;
-    redis.set(`${RedisKey.authToken}:${token}`, JSON.stringify(safeUser), "EX", 60 * 60 *24 * 7)
-    redis.set(`${RedisKey.authUser}:${user.id}`, token, "EX", 60 * 60 *24 * 7)
+    let roleId = "N/A";
+    if (user.role === "teacher") {
+        const [role] = await db
+            .select({
+                id: Teachers.id,
+                status: Teachers.status,
+                firstName: Teachers.firstName,
+                middleName: Teachers.middleName,
+                lastName: Teachers.lastName,
+            })
+            .from(Teachers)
+            .where(
+                and(eq(Teachers.userId, user.id), eq(Teachers.status, "active"))
+            )
+            .limit(1);
+        roleId = role.id;
+    }
 
-    
+    const { passwordHash, ...safeUser } = user;
+    const cacheData = {
+        ...safeUser,
+        roleId
+    }
+    redis.set(
+        `${RedisKey.authToken}:${token}`,
+        JSON.stringify(cacheData),
+        "EX",
+        60 * 60 * 24 * 7
+    );
+    redis.set(`${RedisKey.authUser}:${user.id}`, token, "EX", 60 * 60 * 24 * 7);
+
     return ok({
         user: safeUser,
-    })
+    });
 });

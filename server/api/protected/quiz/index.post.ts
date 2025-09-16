@@ -6,6 +6,6 @@ export default defineEventHandler(async (event) => {
     const user = event.context.user;
     const payload = new CreateQuizRequest(await readBody(event));
     
-    const result = await db.insert(Quizzes).values(payload.getInsertPayload(user.id)).returning;
+    const result = await db.insert(Quizzes).values(payload.getInsertPayload(user.roleId)).returning();
     return created({result});
 });
