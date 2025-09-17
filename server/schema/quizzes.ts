@@ -10,6 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { Teachers } from "./teacher";
 import { Classes } from "./class";
+import { StatusEnum } from "./status";
 
 // Enums
 export const QuestionTypeEnum = pgEnum("question_type", [
@@ -43,6 +44,7 @@ export const QuizzQuestions = pgTable("quizz_questions", {
         .references(() => Quizzes.quizId, { onDelete: "cascade" })
         .notNull(),
     type: QuestionTypeEnum("type").notNull(),
+    status: StatusEnum('status').default('active').notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
