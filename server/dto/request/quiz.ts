@@ -34,3 +34,9 @@ export class CreateQuizRequest implements ICreateQuizRequest {
         }
     }
 }
+
+export interface ICreateQuestionRequest {
+    quizId: string,
+    content: string,
+    type: string
+}
