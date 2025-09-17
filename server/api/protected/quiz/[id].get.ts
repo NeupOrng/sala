@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
                 not(inArray(Quizzes.status, ["deleted", "closed"]))
             )
         );
-    console.log(rawResult)
+    
     if (rawResult.length === 0) {
         return notFound("Quiz Not Found");
     }
