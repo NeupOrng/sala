@@ -1,0 +1,10 @@
+name = "my-sala"
+compatibility_date = "2025-09-18"
+compatibility_flags = ["nodejs_compat"]
+
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "8c0a918ead6e4c5493ead5d6f683bf95"
+
+
+
