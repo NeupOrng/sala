@@ -48,6 +48,7 @@ export const useSchoolStore = defineStore("schoolStore", () => {
     }
     async function fetchStudents() {
         try {
+            students.value = [];
             const { data } = await $apiFetch("/api/protected/students", {
                 credentials: "include",
             });
