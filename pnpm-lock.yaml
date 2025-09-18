@@ -83,6 +83,9 @@ importers:
       shadcn-nuxt:
         specifier: 2.2.0
         version: 2.2.0(magicast@0.3.5)
+      string_decoder:
+        specifier: ^1.3.0
+        version: 1.3.0
       tailwind-merge:
         specifier: ^3.3.0
         version: 3.3.0
