@@ -1,14 +1,19 @@
 <script setup lang="ts">
+import { useLoadingStore } from "~/store/loading";
 import { useSchoolStore } from "~/store/school";
+
 const schoolStore = useSchoolStore();
+const loadingStore = useLoadingStore()
+
 const classes = computed(() => {
     return schoolStore.currentClasses;
 });
 onMounted(async () => {
+    loadingStore.showLoading();
     await Promise.all([
         schoolStore.fetchClasses(),
         schoolStore.fetchTeachers(),
-    ]);
+    ]).finally(() => loadingStore.hideLoading());
 });
 </script>
 <template>

@@ -1,13 +1,18 @@
 <script setup lang="ts">
+import { useLoadingStore } from "~/store/loading";
 import { useSchoolStore } from "~/store/school";
 
 definePageMeta({
     isRequireAuth: true
 })
 const schoolStore = useSchoolStore();
+const loadingStore = useLoadingStore()
 
 onMounted(async () => {
-    await schoolStore.fetchOnLoad();
+    loadingStore.showLoading();
+    await schoolStore.initialize().finally(() => {
+        loadingStore.hideLoading();
+    });
 })
 </script>
 <template>

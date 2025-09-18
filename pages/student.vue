@@ -1,11 +1,15 @@
 <script setup lang="ts">
+import { useLoadingStore } from "~/store/loading";
 import { useSchoolStore } from "~/store/school";
 
 const schoolStore = useSchoolStore();
+const loadingStore = useLoadingStore()
+
 const computedStudents = computed(() => schoolStore.students);
 
 onMounted(async () => {
-    await schoolStore.fetchStudents();
+    loadingStore.showLoading();
+    await schoolStore.fetchStudents().finally(() => loadingStore.hideLoading());
 })
 </script>
 <template>

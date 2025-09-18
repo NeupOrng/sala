@@ -7,6 +7,7 @@ import useClassApi from "./fetch-api/class-api";
 import useSchoolApi from "./fetch-api/school-api";
 import { TeacherDto } from "../model/teacher";
 import useTeacherApi from "./fetch-api/teacher-api";
+import { useLoadingStore } from './loading'
 
 export const useSchoolStore = defineStore("schoolStore", () => {
     const school = ref<ISchool>({
@@ -182,7 +183,7 @@ export const useSchoolStore = defineStore("schoolStore", () => {
             fetchStudents(),
             fetchClasses(),
             fetchTeachers(),
-        ]);
+        ])
     }
 
     function getAvailableStudentsForClass(classId: string): StudentDto[] {
