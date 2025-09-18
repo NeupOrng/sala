@@ -1,9 +1,5 @@
 import Redis from 'ioredis'
 
-const redis = new Redis({
-    host: process.env.REDIS_HOST || 'localhost', // or 'my_redis' from Docker
-    port: parseInt(process.env.REDIS_PORT || '6379'),
-    // password: process.env.REDIS_PASSWORD, // optional
-})
+const redis = new Redis(process.env.REDIS_URL ?? "localhost:6379")
 
 export default redis;
