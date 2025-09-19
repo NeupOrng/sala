@@ -6,7 +6,7 @@ const { addNotification } = useNotification()
 </script>
 <template>
   <ClientOnly>
-    <div class="w-full flex min-h-screen relative">
+    <div class="w-full flex h-screen relative">
       <AppNavigation />
       <AppNotificationStack />
       <main class="flex-1 p-6 overflow-y-auto">

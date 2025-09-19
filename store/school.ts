@@ -8,6 +8,8 @@ import useSchoolApi from "./fetch-api/school-api";
 import { TeacherDto } from "../model/teacher";
 import useTeacherApi from "./fetch-api/teacher-api";
 import { useLoadingStore } from './loading'
+import useQuizApi from "./fetch-api/quiz-api";
+import { QuizDto } from "~/model/quiz";
 
 export const useSchoolStore = defineStore("schoolStore", () => {
     const school = ref<ISchool>({
@@ -19,9 +21,11 @@ export const useSchoolStore = defineStore("schoolStore", () => {
     const students = ref<StudentDto[]>([]);
     const classes = ref<ClassDto[]>([]);
     const teachers = ref<TeacherDto[]>([]);
+    const quizzes = ref<QuizDto[]>([]);
     const schoolApi = useSchoolApi();
     const classApi = useClassApi();
     const teacherApi = useTeacherApi();
+    const quizApi = useQuizApi();
     const { $apiFetch } = useNuxtApp();
     const { addNotification } = useNotification();
 
@@ -177,13 +181,22 @@ export const useSchoolStore = defineStore("schoolStore", () => {
         teachers.value = await teacherApi.fetchTeachers();
     }
 
+    async function fetchQuizzes() {
+        quizzes.value = await quizApi.fetchQuizzes();
+    }
+
+    async function fetchQuizById(quizId: string) {
+        return quizApi.fetchQuizById(quizId);
+    }
+
+    async function updateQuiz(quizModel: QuizDto) {
+        console.log(quizModel);
+    }
+
     async function initialize() {
         await Promise.all([
             fetchSchool(),
             fetchOnLoad(),
-            fetchStudents(),
-            fetchClasses(),
-            fetchTeachers(),
         ])
     }
 
@@ -223,6 +236,7 @@ export const useSchoolStore = defineStore("schoolStore", () => {
         students,
         classes,
         teachers,
+        quizzes,
 
         //action
         fetchSchool,
@@ -239,6 +253,9 @@ export const useSchoolStore = defineStore("schoolStore", () => {
         fetchTeachers,
         getAvailableStudentsForClass,
         getAvailableTeachersForClass,
+        fetchQuizzes,
+        fetchQuizById,
+        updateQuiz,
 
         //Getter
         totalClasses,

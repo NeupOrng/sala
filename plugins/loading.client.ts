@@ -5,6 +5,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   // Show loading screen when a page transition starts
   nuxtApp.hook('page:start', () => {
+    console.log("page:start")
     loadingStore.showLoading()
   })
 
