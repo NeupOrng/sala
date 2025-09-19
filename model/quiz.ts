@@ -93,4 +93,12 @@ export class QuizDto implements IQuizDto {
             hour12: true,
         });
     }
+
+    get startTimeInput(): string {
+        return this.startTime.toISOString().slice(0, 16)
+    }
+
+    set startTimeInput(value: string) {
+        
+    }
 }

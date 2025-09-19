@@ -1,5 +1,3 @@
-import { QuizDto } from "~/model/quiz";
-
 export interface IUseClassApi {
     fetchQuizzes: () => Promise<QuizDto[]>;
     fetchQuizById: (quizId: string) => Promise<QuizDto | undefined>;

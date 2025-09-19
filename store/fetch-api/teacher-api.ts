@@ -1,5 +1,3 @@
-import { TeacherDto } from "../../model/teacher";
-
 export interface IUseTeacherApi {
     fetchTeachers: () => Promise<TeacherDto[]>
 }

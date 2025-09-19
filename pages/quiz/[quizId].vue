@@ -62,10 +62,10 @@
                     <label class="block text-sm font-medium text-gray-700"
                         >Assign Classes</label
                     >
-                    <Select v-model="quizModel.classes" multiple class="mt-1">
+                    <Select v-model="quizModel.class" multiple class="mt-1">
                         <option
                             v-for="classItem in availableClasses"
-                            :key="classItem.classId"
+                            :key="classItem.id"
                             :value="classItem"
                         >
                             {{ classItem.name }}
@@ -223,19 +223,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useLoadingStore } from "~/store/loading";
-import { useSchoolStore } from "~/store/school";
-import { QuestionDto, QuizDto } from "~/model/quiz";
-import {
-    Input,
-    Textarea,
-    Select,
-    Button,
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui";
 import { Plus, Edit, Trash } from "lucide-vue-next";
 import type { ClassDto } from "~/model/class";
 
@@ -270,7 +257,7 @@ onMounted(async () => {
     Promise.all([
         await schoolStore.fetchClasses(),
         await fetchClassById(),
-    ]).finally(() => loadingStore.hideLoading())
+    ]).finally(() => loadingStore.hideLoading());
 });
 
 const openQuestionModal = (index: number | null) => {
