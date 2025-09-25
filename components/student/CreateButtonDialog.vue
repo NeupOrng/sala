@@ -1,28 +1,4 @@
 <script setup lang="ts">
-import {
-    type ICreateStudentModel,
-    CreateStudentModel,
-    StudentDto,
-    type IStudentDto,
-} from "~/model/student";
-import { Button } from "../ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-} from "@/components/ui/dialog";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
-import type { CreateGuardianModel } from "~/model/guardian";
 import { useFieldArray } from "vee-validate";
 
 const props = defineProps<{
@@ -51,11 +27,6 @@ const handleSave = studentModel.value.formContext.handleSubmit(async (value) => 
     }
 });
 const { fields, push, remove } = useFieldArray("guardians");
-
-const test = (event: Event) => {
-    event.preventDefault();
-    console.log(event);
-};
 
 const handleClose = () => {
     isOpen.value = false;

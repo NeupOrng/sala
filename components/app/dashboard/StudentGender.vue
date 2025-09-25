@@ -52,6 +52,10 @@ const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
   cutout: '70%',
+  total: {
+    display: true,
+    text: 'Total'
+  },
   plugins: {
     legend: { position: 'bottom' as const, labels: { color: '#6b7280' } },
   }
