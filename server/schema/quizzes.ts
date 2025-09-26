@@ -14,9 +14,9 @@ import { StatusEnum } from "./status";
 
 // Enums
 export const QuestionTypeEnum = pgEnum("question_type", [
-    "multiple_choice",
-    "true_false",
-    "open_ended",
+    "multiple-choice",
+    "true-false",
+    "short-answer",
 ]);
 export const QuizStatusEnum = pgEnum("quiz_status", ["draft", "published", "closed", "deleted"]);
 

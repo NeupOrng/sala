@@ -97,14 +97,14 @@
                 <div class="flex items-center justify-between mb-2">
                     <Label>Questions</Label>
                     <DialogTrigger asChild>
-                    <Button
-                        variant="outline"
-                        class="mb-4"
-                        @click="onOpenQuestionModal(null)"
-                    >
-                        Add Question
-                    </Button>
-                </DialogTrigger>
+                        <Button
+                            variant="outline"
+                            class="mb-4"
+                            @click="onOpenQuestionModal(null)"
+                        >
+                            Add Question
+                        </Button>
+                    </DialogTrigger>
                 </div>
                 <DialogContent class="max-w-2xl overflow-y-auto max-h-[70vh]">
                     <DialogHeader>
@@ -116,34 +116,55 @@
                     </DialogHeader>
                     <main>
                         <form>
-                        <!-- select type and render question component -->
-                         <Select v-model="currentQuestion.type" class="mb-4 w-full">
-                            <SelectTrigger class="w-full mt-1">
-                                <SelectValue
-                                    placeholder="Select question type"
-                                />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="multiple-choice">
-                                    Multiple Choice
-                                </SelectItem>
-                                <SelectItem value="true-false">
-                                    True / False
-                                </SelectItem>
-                                <SelectItem value="short-answer">
-                                    Short Answer
-                                </SelectItem>
-                            </SelectContent>
-                         </Select>
-                            <QuizQuestionMultipleChoice
-                                v-if="currentQuestion.type === 'multiple-choice'"
+                            <!-- select type and render question component -->
+                            <Select
+                                v-model="currentQuestion.type"
+                                class="mb-4 w-full"
+                                :disabled="editingQuestionIndex !== null"
+                            >
+                                <SelectTrigger class="w-full mt-1">
+                                    <SelectValue
+                                        placeholder="Select question type"
+                                    />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="multiple-choice">
+                                        Multiple Choice
+                                    </SelectItem>
+                                    <SelectItem value="true-false">
+                                        True / False
+                                    </SelectItem>
+                                    <SelectItem value="short-answer">
+                                        Short Answer
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <QuizQuestionMultipleChoiceForm
+                                v-if="
+                                    currentQuestion.type === 'multiple-choice'
+                                "
                                 :quizId="quizDto.quizId"
+                                :isEdit="editingQuestionIndex !== null"
+                                :questionModel="currentQuestion"
                                 @save="onAddQuestion"
                             />
                         </form>
                     </main>
                 </DialogContent>
             </Dialog>
+
+            <!-- Question Render -->
+             <section>
+                <div v-for="(question, index) in questionsForRender" :key="index" class="mb-4">
+                    <QuizQuestionMultipleChoiceReview
+                        v-if="question.type === 'multiple-choice'"
+                        :question="question.getModel<MultipleChoiceQuestionModelDto>()"
+                        @edit="onOpenQuestionModal(index)"
+                    />
+                    <!-- Add other question type reviews here -->
+
+                </div>
+             </section>
 
             <!-- Save Button -->
             <div class="mt-6 flex justify-end gap-4">
@@ -156,12 +177,13 @@
             </div>
         </div>
     </form>
-    {{ quizModel }}
+    {{ questionsForRender }}
     <!-- For debugging purposes -->
 </template>
 
 <script lang="ts" setup>
-import { QuizQuestionMultipleChoice } from '#components';
+import { QuizQuestionMultipleChoiceReview } from '#components';
+
 
 const isQuestionModalOpen = ref(false);
 const editingQuestionIndex = ref<number | null>(null);
@@ -187,14 +209,16 @@ const onSaveQuiz = () => {
 
 const onAddQuestion = (value: QuestionDto) => {
     quizModel.value.questions.push(value);
+    console.log(quizModel.value);
     isQuestionModalOpen.value = false;
 };
 
 const onOpenQuestionModal = (index: number | null) => {
     editingQuestionIndex.value = index;
     isQuestionModalOpen.value = true;
-    const tempQuestion = index !== null ? quizModel.value.questions[index] : null;
-    if(index !== null && tempQuestion) {
+    const tempQuestion =
+        index !== null ? quizModel.value.questions[index] : null;
+    if (index !== null && tempQuestion) {
         currentQuestion.value = new QuestionModelDto();
         currentQuestion.value.values = tempQuestion;
     } else {
@@ -205,6 +229,12 @@ const onOpenQuestionModal = (index: number | null) => {
 const onCancel = () => {
     emit("cancel");
 };
+
+
+
+const questionsForRender = computed(() => {
+    return quizModel.value.questions;
+})
 </script>
 
 <style></style>

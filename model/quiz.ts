@@ -26,11 +26,20 @@ export class QuestionDto implements IQuestionDto {
         this.questionId = json.questionId;
         this.text = this.contentJson.text ?? "";
         this.options = this.contentJson.options ?? [];
-        this.correctAnswer = this.contentJson ?? -1;
+        this.correctAnswer = this.contentJson.correctAnswer ?? -1;
     }
 
     get contentJson() {
         return JSON.parse(this.content);
+    }
+
+    getModel<T>(): T {
+        if (this.type === "multiple-choice") {
+            const mcq = new MultipleChoiceQuestionModelDto();
+            mcq.values = this;
+            return mcq as unknown as T;
+        }
+        return this as unknown as T;
     }
 }
 
@@ -127,12 +136,11 @@ export class MultipleChoiceQuestionModelDto implements IMultipleChoiceQuestionMo
             text: z.string().nonempty('Question text is required'),
             options: z.array(z.string().min(1, 'Option cannot be empty')).min(2, 'At least two options are required').default([]),
             correctAnswer: z.number().min(0, 'A valid correct answer must be selected').default(-1)
-                .refine((val) => {
-                    console.log('Refine check for correctAnswer:', val, this.options);
-                    return val === -1 || this.options.includes(this.options[val]);
-                }, {
-                    message: 'A valid correct answer must be selected',
-                }),
+                .refine((val) =>
+                    val === -1 || this.options.includes(this.options[val])
+                    , {
+                        message: 'A valid correct answer must be selected',
+                    }),
         }));
 
         return useForm<IMultipleChoiceQuestionModelDto>({

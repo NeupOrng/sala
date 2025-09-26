@@ -97,6 +97,9 @@ import { useFieldArray } from "vee-validate";
 
 const props = defineProps<{
     quizId: string;
+    isEdit: boolean;
+    questionModel: QuestionDto;
+    index: number | null;
 }>();
 
 const emit = defineEmits<{
@@ -123,6 +126,7 @@ questionModel.value.values = {
 replace(questionModel.value.options);
 
 const onSaveQuestion = questionModel.value.formContext.handleSubmit(() => {
+    console.log('Saving question:', questionModel.value.getQuestionDto(props.quizId));
     emit("save", questionModel.value.getQuestionDto(props.quizId));
 });
 const addOption = () => {

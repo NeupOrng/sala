@@ -35,12 +35,23 @@ export default defineEventHandler(async (event) => {
         startTime: rawResult[0].quiz.startTime,
         endTime: rawResult[0].quiz.endTime,
         status: rawResult[0].quiz.status,
-        questions: [] as any[],
+        questions: [] as {
+            questionId: string,
+            content: string,
+            quizId: string,
+            type: string
+        }[],
     };
 
     rawResult.forEach((value) => {
         if (value.question !== null) {
-            formattedQuiz.questions.push(value.question);
+            const question = {
+                questionId: value.question.id,
+                content: value.question.content.replaceAll("\\", ""),
+                quizId: value.quiz.quizId,
+                type: value.question.type
+            }
+            formattedQuiz.questions.push(question);
         }
     });
     return ok({
