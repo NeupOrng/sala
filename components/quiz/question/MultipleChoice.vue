@@ -1,5 +1,5 @@
 <template>
-    <form @submit="onSaveQuestion" class="my-4">
+    <form class="my-4" @submit.prevent="onSaveQuestion">
         <FormField name="text" v-slot="{ componentField }">
             <FormItem class="mb-4">
                 <FormLabel>Question Text</FormLabel>
@@ -8,72 +8,71 @@
                         placeholder="Enter question text"
                         class="mt-1"
                         v-bind="componentField"
+                        v-model="questionModel.text"
                     />
                 </FormControl>
                 <FormMessage class="text-sm text-red-500 mt-1" />
             </FormItem>
         </FormField>
-        <FieldArray
-            name="options"
-            class="space-y-2 my-2"
-            v-slot="arrayProps"
-        >
-            <div class="flex flex-col">
-                <Label
-                name="options"
-                :class="`my-2 ${optionValidatedMessage ? 'text-red-500' : ''}`"
-                >Options</Label
-            >
-            <div v-for="(field, index) in fields" :key="field.key">
-                <FormField
-                    :name="`options[${index}]`"
-                    v-slot="{ field: componentField }"
-                >
-                    <FormItem>
-                        <FormControl>
-                            <div class="flex items-start gap-2">
-                                <Input
-                                    v-bind="componentField"
-                                    placeholder="Enter option text"
-                                    class="flex-1"
-                                    v-model="componentField.value"
-                                />
+        <FormField name="options" v-slot="{ field: componentField }">
+            <FormItem class="mb-4">
+                <FormLabel class="flex justify-between items-center">
+                    <p>Options</p>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        class="mb-2"
+                        @click="addOption()"
+                    >
+                        Add Option
+                    </Button>
+                </FormLabel>
+                <FormControl>
+                    <div v-for="(option, index) in optionFields" :key="index">
+                        <FormField
+                            :name="`options[${index}]`"
+                            v-slot="{ field: componentField }"
+                        >
+                            <FormItem class="mb-2 flex items-center gap-2">
+                                <FormControl class="flex-1">
+                                    <Input
+                                        placeholder="Enter option text"
+                                        v-bind="componentField"
+                                        v-model="questionModel.options[index]"
+                                    />
+                                </FormControl>
                                 <Button
                                     type="button"
                                     variant="destructive"
-                                    @click="remove(index)"
+                                    class="px-2 py-1"
+                                    @click="removeOption(index)"
                                 >
                                     Remove
                                 </Button>
-                            </div>
-                        </FormControl>
-                        <FormMessage class="text-sm text-red-500 mt-1" />
-                    </FormItem>
-                </FormField>
-            </div>
-            <span class="text-sm text-red-500 mt-1">{{
-                optionValidatedMessage
-            }}</span>
-            </div>
-        </FieldArray>
-        <Button type="button" variant="outline" class="mb-2" @click="push('')">
-            Add Option
-        </Button>
+                            </FormItem>
+                            <FormMessage class="text-sm text-red-500 mt-1" />
+                        </FormField>
+                    </div>
+                </FormControl>
+                <FormMessage class="text-sm text-red-500 mt-1" />
+            </FormItem>
+        </FormField>
+
         <FormField name="correctAnswer" v-slot="{ field: componentField }">
             <FormItem>
                 <FormLabel>Correct Answer</FormLabel>
                 <FormControl>
-                    <Select v-bind="componentField">
+                    <Select v-bind="componentField" v-model="questionModel.correctAnswer" >
                         <SelectTrigger class="w-full mt-1">
                             <SelectValue placeholder="Select correct answer" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem
-                                v-for="(option, index) in fields"
+                                v-for="(option, index) in questionModel.options"
                                 :key="index"
-                                :value="String(index)"
+                                :value="index"
                             >
-                                {{ option.value || `Option ${index + 1}` }}
+                                {{ `[${index + 1}]  ${option}` }}
                             </SelectItem>
                         </SelectContent>
                     </Select>
@@ -81,7 +80,6 @@
                 <FormMessage class="text-sm text-red-500 mt-1" />
             </FormItem>
         </FormField>
-
         <footer class="flex justify-end items-center gap-2">
             <Button type="button" variant="destructive" class="mt-4 px-4 py-2">
                 Cancel
@@ -95,12 +93,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import {
-    Form,
-    FieldArray,
-    useFieldArray,
-    type InvalidSubmissionContext,
-} from "vee-validate";
+import { useFieldArray } from "vee-validate";
 
 const props = defineProps<{
     quizId: string;
@@ -110,11 +103,14 @@ const emit = defineEmits<{
     (e: "save", question: QuestionDto): void;
 }>();
 
-const questionModel = ref<MultipleChoiceQuestionModelDto>(
-    new MultipleChoiceQuestionModelDto()
-);
+const questionModel = ref(new MultipleChoiceQuestionModelDto());
 
-const { fields, push, remove, replace } = useFieldArray("options");
+const {
+    fields: optionFields,
+    push,
+    remove,
+    replace,
+} = useFieldArray("options");
 
 // Initialize with sample data (optional)
 questionModel.value.values = {
@@ -126,26 +122,17 @@ questionModel.value.values = {
 };
 replace(questionModel.value.options);
 
-const optionValidatedMessage = computed(() => {
-    return questionModel.value.validateOptionsMessage;
+const onSaveQuestion = questionModel.value.formContext.handleSubmit(() => {
+    emit("save", questionModel.value.getQuestionDto(props.quizId));
 });
-
-const onSaveQuestion = questionModel.value.formContext.handleSubmit(
-    async (values: any) => {
-        // Update questionModel with form values
-        questionModel.value.text = values.text;
-        questionModel.value.options = values.options;
-        questionModel.value.correctAnswer = values.correctAnswer;
-        const questionDto = questionModel.value.getQuestionDto(props.quizId);
-        console.log("Saving question:", values, questionDto);
-        questionModel.value.formContext.resetForm();
-        replace([]);
-        emit("save", questionDto);
-    },
-    (err) => {
-        console.log("Validation errors:", err);
-    }
-);
+const addOption = () => {
+    // questionModel.value.options.push('')
+    push("");
+};
+const removeOption = (index: number) => {
+    questionModel.value.options.splice(index, 1);
+    remove(index);
+};
 </script>
 
 <style></style>

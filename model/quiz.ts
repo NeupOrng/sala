@@ -54,7 +54,7 @@ export interface IQuestionModelDto {
 export interface IMultipleChoiceQuestionModelDto extends IQuestionModelDto {
     text: string;
     options: string[];
-    correctAnswer: string;
+    correctAnswer: number;
 }
 
 export class MultipleChoiceQuestionModelDto implements IMultipleChoiceQuestionModelDto {
@@ -62,14 +62,14 @@ export class MultipleChoiceQuestionModelDto implements IMultipleChoiceQuestionMo
     type: string;
     text: string;
     options: string[];
-    correctAnswer: string;
+    correctAnswer: number;
 
     constructor() {
         this.content = '';
         this.type = 'multiple-choice';
         this.text = '';
         this.options = [];
-        this.correctAnswer = '';
+        this.correctAnswer = -1;
     }
 
     set values(json: any) {
@@ -79,12 +79,12 @@ export class MultipleChoiceQuestionModelDto implements IMultipleChoiceQuestionMo
             const contentJson = JSON.parse(this.content || '{}');
             this.text = contentJson.text ?? '';
             this.options = Array.isArray(contentJson.options) ? contentJson.options : [];
-            this.correctAnswer = contentJson.correctAnswer ?? '';
+            this.correctAnswer = this.options.indexOf(contentJson.correctAnswer) ?? -1;
         } catch (error) {
             console.error('Error parsing content JSON:', error);
             this.text = '';
             this.options = [];
-            this.correctAnswer = '';
+            this.correctAnswer = -1;
         }
     }
 
@@ -102,18 +102,8 @@ export class MultipleChoiceQuestionModelDto implements IMultipleChoiceQuestionMo
         if (this.options.some((option) => !option || option.trim().length === 0)) {
             return 'All options must be non-empty.';
         }
-        if (this.correctAnswer === '' || this.options.every((opt) => opt !== this.correctAnswer)) {
+        if (this.correctAnswer === -1 || this.options.includes(this.options[this.correctAnswer]) === false) {
             return 'A valid correct answer must be selected.';
-        }
-        return '';
-    }
-
-    get validateOptionsMessage(): string {
-        if (this.options.length < 2) {
-            return 'At least two options are required.';
-        }
-        if (this.options.some((option) => !option || option.trim().length === 0)) {
-            return 'All options must be non-empty.';
         }
         return '';
     }
@@ -125,7 +115,7 @@ export class MultipleChoiceQuestionModelDto implements IMultipleChoiceQuestionMo
             content: JSON.stringify({
                 text: this.text,
                 options: this.options,
-                correctAnswer: this.correctAnswer,
+                correctAnswer: this.options[this.correctAnswer],
             }),
             type: 'multiple-choice',
         });
@@ -136,8 +126,11 @@ export class MultipleChoiceQuestionModelDto implements IMultipleChoiceQuestionMo
             type: z.literal('multiple-choice'),
             text: z.string().nonempty('Question text is required'),
             options: z.array(z.string().min(1, 'Option cannot be empty')).min(2, 'At least two options are required').default([]),
-            correctAnswer: z.string().min(0, 'A valid correct answer must be selected').default('')
-                .refine((val) => val === '' || this.options.every((opt) => opt !== val), {
+            correctAnswer: z.number().min(0, 'A valid correct answer must be selected').default(-1)
+                .refine((val) => {
+                    console.log('Refine check for correctAnswer:', val, this.options);
+                    return val === -1 || this.options.includes(this.options[val]);
+                }, {
                     message: 'A valid correct answer must be selected',
                 }),
         }));
