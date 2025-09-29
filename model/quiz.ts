@@ -1,8 +1,7 @@
-import { useForm, type FormContext } from 'vee-validate'
-import * as z from 'zod'
-import * as yup from 'yup'
-import { toTypedSchema } from '@vee-validate/zod'
-import { formatDateToStringForInputComponent } from '~/lib/date-utils'
+import { useForm, type FormContext } from "vee-validate";
+import * as z from "zod";
+import { toTypedSchema } from "@vee-validate/zod";
+import { formatDateToStringForInputComponent } from "~/lib/date-utils";
 
 export interface IQuestionDto {
     quizId: string;
@@ -66,7 +65,9 @@ export interface IMultipleChoiceQuestionModelDto extends IQuestionModelDto {
     correctAnswer: number;
 }
 
-export class MultipleChoiceQuestionModelDto implements IMultipleChoiceQuestionModelDto {
+export class MultipleChoiceQuestionModelDto
+    implements IMultipleChoiceQuestionModelDto
+{
     content: string;
     type: string;
     text: string;
@@ -74,74 +75,101 @@ export class MultipleChoiceQuestionModelDto implements IMultipleChoiceQuestionMo
     correctAnswer: number;
 
     constructor() {
-        this.content = '';
-        this.type = 'multiple-choice';
-        this.text = '';
+        this.content = "";
+        this.type = "multiple-choice";
+        this.text = "";
         this.options = [];
         this.correctAnswer = -1;
     }
 
     set values(json: any) {
-        this.content = json.content ?? '';
-        this.type = json.type ?? 'multiple-choice';
+        this.content = json.content ?? "";
+        this.type = json.type ?? "multiple-choice";
         try {
-            const contentJson = JSON.parse(this.content || '{}');
-            this.text = contentJson.text ?? '';
-            this.options = Array.isArray(contentJson.options) ? contentJson.options : [];
-            this.correctAnswer = this.options.indexOf(contentJson.correctAnswer) ?? -1;
+            const contentJson = JSON.parse(this.content || "{}");
+            this.text = contentJson.text ?? "";
+            this.options = Array.isArray(contentJson.options)
+                ? contentJson.options
+                : [];
+            this.correctAnswer =
+                this.options.indexOf(contentJson.correctAnswer) ?? -1;
         } catch (error) {
-            console.error('Error parsing content JSON:', error);
-            this.text = '';
+            console.error("Error parsing content JSON:", error);
+            this.text = "";
             this.options = [];
             this.correctAnswer = -1;
         }
     }
 
     get isValid(): boolean {
-        return this.validateMessage === '';
+        return this.validateMessage === "";
     }
 
     get validateMessage(): string {
         if (!this.text || this.text.trim().length === 0) {
-            return 'Question text is required.';
+            return "Question text is required.";
         }
         if (this.options.length < 2) {
-            return 'At least two options are required.';
+            return "At least two options are required.";
         }
-        if (this.options.some((option) => !option || option.trim().length === 0)) {
-            return 'All options must be non-empty.';
+        if (
+            this.options.some((option) => !option || option.trim().length === 0)
+        ) {
+            return "All options must be non-empty.";
         }
-        if (this.correctAnswer === -1 || this.options.includes(this.options[this.correctAnswer]) === false) {
-            return 'A valid correct answer must be selected.';
+        if (
+            this.correctAnswer === -1 ||
+            this.options.includes(this.options[this.correctAnswer]) === false
+        ) {
+            return "A valid correct answer must be selected.";
         }
-        return '';
+        return "";
     }
 
     getQuestionDto(quizId: string): QuestionDto {
         return new QuestionDto({
             quizId,
-            questionId: '',
+            questionId: "",
             content: JSON.stringify({
                 text: this.text,
                 options: this.options,
                 correctAnswer: this.options[this.correctAnswer],
             }),
-            type: 'multiple-choice',
+            type: "multiple-choice",
         });
     }
 
     get formContext(): FormContext<IMultipleChoiceQuestionModelDto> {
-        const schema = toTypedSchema(z.object({
-            type: z.literal('multiple-choice'),
-            text: z.string().nonempty('Question text is required'),
-            options: z.array(z.string().min(1, 'Option cannot be empty')).min(2, 'At least two options are required').default([]),
-            correctAnswer: z.number().min(0, 'A valid correct answer must be selected').default(-1)
-                .refine((val) =>
-                    val === -1 || this.options.includes(this.options[val])
-                    , {
-                        message: 'A valid correct answer must be selected',
-                    }),
-        }));
+        const schema = toTypedSchema(
+            z.object({
+                type: z.literal("multiple-choice"),
+                text: z
+                    .string()
+                    .refine((val) => this.text.trim().length > 0, {
+                        message: "Question text is required.",
+                    })
+                    .default(""),
+                options: z
+                    .array(z.string().min(1, "Option cannot be empty"))
+                    .refine((val) => this.options.length >= 2, {
+                        message: "At least two options are required",
+                    })
+                    .default([]),
+                correctAnswer: z
+                    .number()
+                    .default(-1)
+                    .refine(
+                        (val) =>
+                            this.correctAnswer === -1 ||
+                            this.options.includes(
+                                this.options[this.correctAnswer]
+                            ),
+                        {
+                            message: "A valid correct answer must be selected",
+                        }
+                    ),
+            })
+        );
 
         return useForm<IMultipleChoiceQuestionModelDto>({
             validationSchema: schema,
@@ -170,35 +198,11 @@ export class QuestionModelDto implements IQuestionModelDto {
         this.type = json.type ?? "multiple-choice";
     }
 
-    get formContext(): FormContext<IQuestionModelDto> {
-        const schema = toTypedSchema(z.object({
-            type: z.enum(["multiple-choice", "true-false", "short-answer"], {
-                errorMap: () => ({ message: "Type must be one of multiple-choice, true-false, or short-answer" })
-            })
-                .default("multiple-choice"),
-            content: z.string().refine((val) => {
-                if (this.type === "multiple-choice") {
-                    const multipleChoice = new MultipleChoiceQuestionModelDto();
-                    multipleChoice.values = { content: val, type: this.type };
-                    return multipleChoice.isValid;
-                }
-                return val.trim().length > 0;
-            }, (val: any) => {
-                if (this.type === "multiple-choice") {
-                    const multipleChoice = new MultipleChoiceQuestionModelDto();
-                    multipleChoice.values = { content: val, type: this.type };
-                    return { message: multipleChoice.validateMessage };
-                }
-                return { message: "Content is required." };
-            })
-        }));
-        return useForm<IQuestionModelDto>({
-            validationSchema: schema,
-            initialValues: {
-                content: this.content,
-                type: this.type,
-            },
-        });
+    get values(): IQuestionModelDto {
+        return {
+            content: this.content,
+            type: this.type,
+        };
     }
 }
 
@@ -254,12 +258,10 @@ export class QuizDto implements IQuizDto {
     }
 
     get startTimeInput(): string {
-        return this.startTime.toISOString().slice(0, 16)
+        return this.startTime.toISOString().slice(0, 16);
     }
 
-    set startTimeInput(value: string) {
-
-    }
+    set startTimeInput(value: string) {}
 }
 
 export interface IQuizModelDto {
@@ -278,25 +280,35 @@ export class QuizModelDto implements IQuizModelDto {
     endTime: string;
     classId: string;
     questions: QuestionDto[];
+    status: string;
+    quizId: string;
 
     constructor() {
         this.title = "";
         this.description = "";
-        this.startTime = '';
-        this.endTime = '';
+        this.startTime = "";
+        this.endTime = "";
         this.classId = "";
+        this.status = "draft";
         this.questions = [];
+        this.quizId = "";
     }
 
     set values(json: any) {
         this.title = json.title ?? "";
         this.description = json.description ?? "";
-        this.startTime = formatDateToStringForInputComponent(json.startTime ?? new Date());
-        this.endTime = formatDateToStringForInputComponent(json.endTime ?? new Date());
+        this.startTime = formatDateToStringForInputComponent(
+            json.startTime ?? new Date()
+        );
+        this.endTime = formatDateToStringForInputComponent(
+            json.endTime ?? new Date()
+        );
         this.questions = json.questions
             ? json.questions.map((value: any) => new QuestionDto(value))
             : [];
         this.classId = json.classId ?? "";
+        this.status = json.status ?? "draft";
+        this.quizId = json.quizId ?? "";
         this.formContext.setValues({
             title: this.title,
             description: this.description,
@@ -307,21 +319,54 @@ export class QuizModelDto implements IQuizModelDto {
         });
     }
 
+    get updateQuizRequestDto(): UpdateQuizRequestDto {
+        return new UpdateQuizRequestDto({
+            quizId: this.quizId,
+            title: this.title,
+            description: this.description,
+            status: this.status,
+            startTime: this.startTime,
+            endTime: this.endTime,
+            classId: this.classId,
+            questions: this.questions,
+        });
+    }
+
     get formContext(): FormContext<IQuizModelDto> {
         const questionSchema = z.object({
             content: z.string().min(1, "Content is required"),
             type: z.enum(["multiple-choice", "true-false", "short-answer"], {
-                errorMap: () => ({ message: "Type must be one of multiple-choice, true-false, or short-answer" })
-            })
+                errorMap: () => ({
+                    message:
+                        "Type must be one of multiple-choice, true-false, or short-answer",
+                }),
+            }),
         });
-        const schema = toTypedSchema(z.object({
-            title: z.string().min(3, "Title must be at least 3 characters").max(100, "Title must be at most 100 characters"),
-            description: z.string().max(500, "Description must be at most 500 characters").optional(),
-            classId: z.string().nonempty("Class is required"),
-            startTime: z.string().refine(date => new Date(date) > new Date(), { message: "Start time must be in the future" }),
-            endTime: z.string().refine(date => new Date(date) > new Date(this.startTime), { message: "End time must be after start time" }),
-            questions: z.array(questionSchema).default([]).optional(),
-        }));
+        const schema = toTypedSchema(
+            z.object({
+                title: z
+                    .string()
+                    .min(3, "Title must be at least 3 characters")
+                    .max(100, "Title must be at most 100 characters"),
+                description: z
+                    .string()
+                    .max(500, "Description must be at most 500 characters")
+                    .optional(),
+                classId: z.string().nonempty("Class is required"),
+                startTime: z
+                    .string()
+                    .refine((date) => new Date(date) > new Date(), {
+                        message: "Start time must be in the future",
+                    }),
+                endTime: z
+                    .string()
+                    .refine(
+                        (date) => new Date(date) > new Date(this.startTime),
+                        { message: "End time must be after start time" }
+                    ),
+                questions: z.array(questionSchema).default([]).optional(),
+            })
+        );
         return useForm<IQuizModelDto>({
             validationSchema: schema,
             initialValues: {
@@ -333,5 +378,29 @@ export class QuizModelDto implements IQuizModelDto {
                 questions: [],
             },
         });
+    }
+}
+
+export class UpdateQuizRequestDto {
+    quizId: string;
+    title: string;
+    description: string;
+    startTime: string;
+    endTime: string;
+    classId: string;
+    status: string;
+    questions: IQuestionDto[];
+
+    constructor(json: any) {
+        this.quizId = json.quizId;
+        this.title = json.title;
+        this.description = json.description;
+        this.startTime = json.startTime;
+        this.endTime = json.endTime;
+        this.classId = json.classId;
+        this.status = json.status;
+        this.questions = json.questions
+            ? json.questions.map((value: any) => new QuestionDto(value))
+            : [];
     }
 }

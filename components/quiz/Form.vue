@@ -100,7 +100,7 @@
                         <Button
                             variant="outline"
                             class="mb-4"
-                            @click="onOpenQuestionModal(null)"
+                            @click="onOpenQuestionModal(-1)"
                         >
                             Add Question
                         </Button>
@@ -109,7 +109,7 @@
                 <DialogContent class="max-w-2xl overflow-y-auto max-h-[70vh]">
                     <DialogHeader>
                         <DialogTitle>{{
-                            editingQuestionIndex !== null
+                            editingQuestionIndex !== -1
                                 ? "Edit Question"
                                 : "Add Question"
                         }}</DialogTitle>
@@ -120,7 +120,7 @@
                             <Select
                                 v-model="currentQuestion.type"
                                 class="mb-4 w-full"
-                                :disabled="editingQuestionIndex !== null"
+                                :disabled="editingQuestionIndex !== -1"
                             >
                                 <SelectTrigger class="w-full mt-1">
                                     <SelectValue
@@ -145,7 +145,9 @@
                                 "
                                 :quizId="quizDto.quizId"
                                 :isEdit="editingQuestionIndex !== null"
-                                :questionModel="currentQuestion"
+                                :questionModelProp="currentQuestion"
+                                :index="editingQuestionIndex"
+                                @cancel="onCancelQuestion"
                                 @save="onAddQuestion"
                             />
                         </form>
@@ -177,34 +179,33 @@
             </div>
         </div>
     </form>
-    {{ questionsForRender }}
-    <!-- For debugging purposes -->
 </template>
 
 <script lang="ts" setup>
-import { QuizQuestionMultipleChoiceReview } from '#components';
-
 
 const isQuestionModalOpen = ref(false);
-const editingQuestionIndex = ref<number | null>(null);
+const editingQuestionIndex = ref<number>(-1);
 const currentQuestion = ref<QuestionModelDto>(new QuestionModelDto());
 
 const props = defineProps<{
     quizDto: QuizDto;
     availableClasses: ClassDto[];
+    onUpdateQuiz: (quiz: UpdateQuizRequestDto) => Promise<void>;
 }>();
 
 const quizModel = ref<QuizModelDto>(new QuizModelDto());
 quizModel.value.values = props.quizDto;
 
 const emit = defineEmits<{
-    (e: "save", quiz: QuizDto): void;
+    (e: "save"): void;
     (e: "cancel"): void;
 }>();
 
-const onSaveQuiz = () => {
-    console.log(quizModel.value);
-    emit("save", props.quizDto);
+const onSaveQuiz = async () => {
+    console.log("Saving quiz:", quizModel.value.updateQuizRequestDto);
+    await props.onUpdateQuiz(quizModel.value.updateQuizRequestDto).finally(() => {
+        emit("save");
+    })  ;
 };
 
 const onAddQuestion = (value: QuestionDto) => {
@@ -213,7 +214,7 @@ const onAddQuestion = (value: QuestionDto) => {
     isQuestionModalOpen.value = false;
 };
 
-const onOpenQuestionModal = (index: number | null) => {
+const onOpenQuestionModal = (index: number) => {
     editingQuestionIndex.value = index;
     isQuestionModalOpen.value = true;
     const tempQuestion =
@@ -226,15 +227,22 @@ const onOpenQuestionModal = (index: number | null) => {
     }
 };
 
+const onCancelQuestion = () => {
+    isQuestionModalOpen.value = false;
+    editingQuestionIndex.value = -1;
+    currentQuestion.value = new QuestionModelDto();
+};
 const onCancel = () => {
     emit("cancel");
 };
 
 
-
 const questionsForRender = computed(() => {
     return quizModel.value.questions;
 })
+
+onMounted(() => {
+    currentQuestion.value.type = "multiple-choice";
+});
 </script>
 
-<style></style>

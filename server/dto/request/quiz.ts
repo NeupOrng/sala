@@ -40,3 +40,16 @@ export interface ICreateQuestionRequest {
     content: string,
     type: string
 }
+
+export class CreateQuestionRequest {
+    
+}
+
+export class UpdateQuizRequest {
+    classId: string;
+    title: string;
+description: string;
+    startTime: Date;
+    endTime: Date;
+    status: QuizStatusEnum;
+    questions: 

@@ -189,7 +189,7 @@ export const useSchoolStore = defineStore("schoolStore", () => {
         return quizApi.fetchQuizById(quizId);
     }
 
-    async function updateQuiz(quizModel: QuizDto) {
+    async function updateQuiz(quizModel: UpdateQuizRequestDto) {
         console.log(quizModel);
     }
 

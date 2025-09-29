@@ -9,7 +9,7 @@
             :availableClasses="schoolStore.classes"
             :onOpenQuestionModal="openQuestionModal"
             :onDeleteQuestion="deleteQuestion"
-            :onSaveQuiz="saveQuiz"
+            :onUpdateQuiz="updateQuiz"
             :saving="saving"
             :onCancel="navigateBack"
         />
@@ -72,32 +72,18 @@ const removeOption = (index: number) => {
     }
 };
 
-const saveQuestion = () => {
-    if (!quizModel.value) return;
-    if (editingQuestionIndex.value !== null) {
-        quizModel.value.questions[editingQuestionIndex.value] = new QuestionDto(
-            { ...currentQuestion.value }
-        );
-    } else {
-        quizModel.value.questions.push(
-            new QuestionDto({ ...currentQuestion.value })
-        );
-    }
-    isQuestionModalOpen.value = false;
-};
-
 const deleteQuestion = (index: number) => {
     if (quizModel.value) {
         quizModel.value.questions.splice(index, 1);
     }
 };
 
-const saveQuiz = async () => {
+const updateQuiz = async (updateQuiz: UpdateQuizRequestDto) => {
     if (!quizModel.value) return;
     saving.value = true;
     try {
-        await schoolStore.updateQuiz(quizModel.value);
-        router.push("/quizzes"); // Redirect to quizzes list or dashboard
+        await schoolStore.updateQuiz(updateQuiz);
+        router.push("/quiz"); // Redirect to quizzes list or dashboard
     } catch (error) {
         console.error("Failed to save quiz:", error);
     } finally {

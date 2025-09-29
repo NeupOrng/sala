@@ -81,7 +81,7 @@
             </FormItem>
         </FormField>
         <footer class="flex justify-end items-center gap-2">
-            <Button type="button" variant="destructive" class="mt-4 px-4 py-2">
+            <Button type="button" variant="destructive" class="mt-4 px-4 py-2" @click="onCancel">
                 Cancel
             </Button>
             <Button type="submit" variant="default" class="mt-4 px-4 py-2">
@@ -98,12 +98,13 @@ import { useFieldArray } from "vee-validate";
 const props = defineProps<{
     quizId: string;
     isEdit: boolean;
-    questionModel: QuestionDto;
-    index: number | null;
+    questionModelProp: QuestionModelDto;
+    index: number;
 }>();
 
 const emit = defineEmits<{
     (e: "save", question: QuestionDto): void;
+    (e: "cancel"): void;
 }>();
 
 const questionModel = ref(new MultipleChoiceQuestionModelDto());
@@ -123,19 +124,31 @@ questionModel.value.values = {
         correctAnswer: "",
     }),
 };
-replace(questionModel.value.options);
+
+onMounted(() => {
+    if (props.isEdit && props.questionModelProp) {
+        questionModel.value.values = props.questionModelProp.values;
+    }
+    questionModel.value.formContext.setValues({
+        text: questionModel.value.text,
+        options: questionModel.value.options,
+        correctAnswer: questionModel.value.correctAnswer,
+    });
+    replace(questionModel.value.options);
+});
 
 const onSaveQuestion = questionModel.value.formContext.handleSubmit(() => {
     console.log('Saving question:', questionModel.value.getQuestionDto(props.quizId));
     emit("save", questionModel.value.getQuestionDto(props.quizId));
 });
 const addOption = () => {
-    // questionModel.value.options.push('')
     push("");
 };
 const removeOption = (index: number) => {
-    questionModel.value.options.splice(index, 1);
     remove(index);
+};
+const onCancel = () => {
+    emit("cancel");
 };
 </script>
 
