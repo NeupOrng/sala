@@ -3,6 +3,7 @@ import { useNotification } from "~/composables/use-notification";
 import { Form, FormField } from "~/components/ui/form";
 import { LoginModel, type ILoginModel } from "~/model/login";
 import { useProfileStore } from "~/store/profile";
+import ProfileRole from "~/model/enums/profile-role.enum";
 
 const { addNotification } = useNotification();
 const profileStore = useProfileStore();
@@ -22,13 +23,18 @@ const onSubmit = formContext.handleSubmit(async (values) => {
     try {
         const result = await profileStore.login(values); // assuming you have a login action
         if (result.isSuccess) {
+            
             addNotification({
                 title: "Login Success",
                 description: "Login success successfully",
                 type: "default",
                 duration: 4000,
             })
-            navigateTo('/');
+            if(profileStore.userProfile.role === ProfileRole.TEACHER) {
+                navigateTo('/school');
+            } else {
+                navigateTo('/');
+            }
         } else {
             addNotification({
                 title: "Login Fail",

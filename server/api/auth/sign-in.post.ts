@@ -9,7 +9,6 @@ import { forbidden } from "~/server/utils/response/error-helpers";
 import { ok } from "~/server/utils/response/success-helper";
 import { JWT_SECRET } from "~/server/dto/constant/env";
 import { Teachers } from "~/server/schema";
-import { first } from "lodash";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
@@ -36,7 +35,7 @@ export default defineEventHandler(async (event) => {
         secure: process.env.NODE_ENV === "production",
         path: "/",
         sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 7, // 7 days
+        maxAge: 60 * 60 * 24, // 7 days
     });
 
     let roleId = "N/A";

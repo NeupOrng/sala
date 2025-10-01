@@ -1,5 +1,5 @@
 <template>
-    <NuxtLink :to="`/quiz/${quizItem.quizId}`">
+    <NuxtLink :to="`/school/quiz/${quizItem.quizId}`">
         <Card
             class="w-[24rem] m-1 cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100"
         >

@@ -4,7 +4,7 @@ export interface IUseSchoolApi {
     fetchSchool: () => Promise<ISchool>
 }
 
-const useSchoolApi = () => {
+const useSchoolApi = (): IUseSchoolApi => {
     const { $apiFetch } = useNuxtApp();
     const { addNotification } = useNotification();
 
