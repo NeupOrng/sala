@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-import { useLoadingStore } from "~/store/loading";
-import { useSchoolStore } from "~/store/school";
 
-const schoolStore = useSchoolStore();
+const quizStore = useQuizStore();
 const loadingStore = useLoadingStore();
 onMounted(async () => {
-    await schoolStore.fetchQuizzes().finally(() => loadingStore.hideLoading());
+    await quizStore.fetchQuizzes().finally(() => loadingStore.hideLoading());
 });
 </script>
 <template>
@@ -15,7 +13,7 @@ onMounted(async () => {
         </div>
         <div class="p-2 flex flex-wrap">
             <QuizDisplayItem
-                v-for="quiz in schoolStore.quizzes"
+                v-for="quiz in quizStore.quizzes"
                 :key="quiz.quizId"
                 :quizItem="quiz"
             />

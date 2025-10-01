@@ -6,6 +6,7 @@ import { formatDateToStringForInputComponent } from "~/lib/date-utils";
 export interface IQuestionDto {
     quizId: string;
     questionId: string;
+    status: string;
     content: string;
     type: string;
 }
@@ -16,6 +17,7 @@ export class QuestionDto implements IQuestionDto {
     type: string;
     text: string;
     options: string[];
+    status: string;
     correctAnswer: number;
 
     constructor(json: any) {
@@ -26,6 +28,7 @@ export class QuestionDto implements IQuestionDto {
         this.text = this.contentJson.text ?? "";
         this.options = this.contentJson.options ?? [];
         this.correctAnswer = this.contentJson.correctAnswer ?? -1;
+        this.status = json.status ?? "active";
     }
 
     get contentJson() {
@@ -49,7 +52,6 @@ export interface IQuizDto {
     status: string;
     startTime: Date;
     endTime: Date;
-    class: IClassDto;
     teacher: ITeacherDto;
     questions: IQuestionDto[];
 }
@@ -57,6 +59,7 @@ export interface IQuizDto {
 export interface IQuestionModelDto {
     content: string;
     type: string;
+    status: string;
 }
 
 export interface IMultipleChoiceQuestionModelDto extends IQuestionModelDto {
@@ -65,13 +68,12 @@ export interface IMultipleChoiceQuestionModelDto extends IQuestionModelDto {
     correctAnswer: number;
 }
 
-export class MultipleChoiceQuestionModelDto
-    implements IMultipleChoiceQuestionModelDto
-{
+export class MultipleChoiceQuestionModelDto implements IMultipleChoiceQuestionModelDto {
     content: string;
     type: string;
     text: string;
     options: string[];
+    status: string;
     correctAnswer: number;
 
     constructor() {
@@ -80,6 +82,7 @@ export class MultipleChoiceQuestionModelDto
         this.text = "";
         this.options = [];
         this.correctAnswer = -1;
+        this.status = "active";
     }
 
     set values(json: any) {
@@ -93,6 +96,7 @@ export class MultipleChoiceQuestionModelDto
                 : [];
             this.correctAnswer =
                 this.options.indexOf(contentJson.correctAnswer) ?? -1;
+            this.status = json.status ?? "active";
         } catch (error) {
             console.error("Error parsing content JSON:", error);
             this.text = "";
@@ -187,21 +191,25 @@ export class MultipleChoiceQuestionModelDto
 export class QuestionModelDto implements IQuestionModelDto {
     content: string;
     type: string;
+    status: string;
 
     constructor() {
         this.content = "";
+        this.status = "active";
         this.type = "multiple-choice";
     }
 
     set values(json: any) {
         this.content = json.content ?? "";
         this.type = json.type ?? "multiple-choice";
+        this.status = json.status ?? "active";
     }
 
     get values(): IQuestionModelDto {
         return {
             content: this.content,
             type: this.type,
+            status: this.status,
         };
     }
 }
@@ -213,7 +221,7 @@ export class QuizDto implements IQuizDto {
     status: string;
     startTime: Date;
     endTime: Date;
-    class: ClassDto;
+    classId: string;
     teacher: TeacherDto;
     questions: QuestionDto[];
 
@@ -224,8 +232,8 @@ export class QuizDto implements IQuizDto {
         this.status = json.status;
         this.startTime = new Date(json.startTime);
         this.endTime = new Date(json.endTime);
-        this.class = new ClassDto(json.class);
         this.teacher = new TeacherDto(json.teacher);
+        this.classId = json.classId ?? '';
         this.questions = json.questions
             ? json.questions.map((value: any) => new QuestionDto(value))
             : [];
@@ -261,7 +269,7 @@ export class QuizDto implements IQuizDto {
         return this.startTime.toISOString().slice(0, 16);
     }
 
-    set startTimeInput(value: string) {}
+    set startTimeInput(value: string) { }
 }
 
 export interface IQuizModelDto {
@@ -317,6 +325,15 @@ export class QuizModelDto implements IQuizModelDto {
             questions: this.questions,
             classId: this.classId,
         });
+
+        this.formContext.setValues({
+            title: this.title,
+            description: this.description,
+            classId: this.classId,
+            startTime: this.startTime,
+            endTime: this.endTime,
+            questions: this.questions,
+        }, true)
     }
 
     get updateQuizRequestDto(): UpdateQuizRequestDto {
@@ -370,9 +387,9 @@ export class QuizModelDto implements IQuizModelDto {
         return useForm<IQuizModelDto>({
             validationSchema: schema,
             initialValues: {
-                title: "",
-                description: "",
-                classId: "",
+                title: this.title,
+                description: this.description,
+                classId: this.classId,
                 startTime: this.startTime,
                 endTime: this.endTime,
                 questions: [],
@@ -416,6 +433,7 @@ export class UpdateQuizRequestDto {
             questions: this.questions.map((q) => ({
                 questionId: q.questionId,
                 content: q.content,
+                status: q.status,
                 type: q.type,
             })),
         });

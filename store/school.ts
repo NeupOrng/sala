@@ -25,7 +25,6 @@ export const useSchoolStore = defineStore("schoolStore", () => {
     const schoolApi = useSchoolApi();
     const classApi = useClassApi();
     const teacherApi = useTeacherApi();
-    const quizApi = useQuizApi();
     const { $apiFetch } = useNuxtApp();
     const { addNotification } = useNotification();
 
@@ -181,18 +180,6 @@ export const useSchoolStore = defineStore("schoolStore", () => {
         teachers.value = await teacherApi.fetchTeachers();
     }
 
-    async function fetchQuizzes() {
-        quizzes.value = await quizApi.fetchQuizzes();
-    }
-
-    async function fetchQuizById(quizId: string) {
-        return quizApi.fetchQuizById(quizId);
-    }
-
-    async function updateQuiz(quizModel: UpdateQuizRequestDto) {
-        await quizApi.updateQuiz(quizModel);
-    }
-
     async function initialize() {
         await Promise.all([
             fetchSchool(),
@@ -253,9 +240,6 @@ export const useSchoolStore = defineStore("schoolStore", () => {
         fetchTeachers,
         getAvailableStudentsForClass,
         getAvailableTeachersForClass,
-        fetchQuizzes,
-        fetchQuizById,
-        updateQuiz,
 
         //Getter
         totalClasses,

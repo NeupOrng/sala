@@ -22,7 +22,7 @@
                             <span class="text-xs text-gray-500">Questions</span>
                             <span
                                 class="block text-sm font-semibold text-gray-800"
-                                >0</span
+                                >{{ quizItem.questions.length }}</span
                             >
                         </div>
                     </div>
@@ -66,8 +66,7 @@ import _ from "lodash";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { QuizDto } from "~/model/quiz";
 
-const props = defineProps<{
+defineProps<{
     quizItem: QuizDto;
 }>();
-const quizModel = ref<QuizDto>(_.cloneDeep(props.quizItem));
 </script>

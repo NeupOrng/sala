@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
                 not(inArray(Quizzes.status, ["deleted", "closed"]))
             )
         );
-    
+
     if (rawResult.length === 0) {
         return notFound("Quiz Not Found");
     }
@@ -35,11 +35,13 @@ export default defineEventHandler(async (event) => {
         startTime: rawResult[0].quiz.startTime,
         endTime: rawResult[0].quiz.endTime,
         status: rawResult[0].quiz.status,
+        classId: rawResult[0].quiz.classId,
         questions: [] as {
             questionId: string,
             content: string,
             quizId: string,
-            type: string
+            type: string,
+            status: string
         }[],
     };
 
@@ -49,7 +51,8 @@ export default defineEventHandler(async (event) => {
                 questionId: value.question.id,
                 content: value.question.content.replaceAll("\\", ""),
                 quizId: value.quiz.quizId,
-                type: value.question.type
+                type: value.question.type,
+                status: value.question.status,
             }
             formattedQuiz.questions.push(question);
         }

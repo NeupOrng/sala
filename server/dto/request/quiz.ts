@@ -46,17 +46,22 @@ export class UpdateQuestionRequest {
     questionId: string;
     content: string;
     type: string;
+    status: string;
+    isNew: boolean = false;
 
     constructor(json: any) {
         this.questionId = json.questionId ?? "";
         this.content = json.content ?? "";
         this.type = json.type ?? "multiple-choice";
+        this.status = json.status ?? "active";
     }
 }
 
 export class CreateQuestionRequest {
     content: string;
     type: string;
+    status: string = "active";
+    isNew: boolean = true;
 
     constructor(json: any) {
         this.content = json.content ?? "";

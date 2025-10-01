@@ -19,21 +19,20 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { Plus, Edit, Trash } from "lucide-vue-next";
 
 const loadingStore = useLoadingStore();
+const quizStore = useQuizStore();
 const schoolStore = useSchoolStore();
 const route = useRoute();
 const router = useRouter();
 
 const quizModel = ref<QuizDto>();
 const isQuestionModalOpen = ref(false);
-const currentQuestion = ref<QuestionDto>(new QuestionDto({}));
 const editingQuestionIndex = ref<number | null>(null);
 const saving = ref(false);
 
 async function fetchClassById() {
-    quizModel.value = await schoolStore.fetchQuizById(
+    quizModel.value = await quizStore.fetchQuizById(
         route.params.quizId.toString()
     );
 }
@@ -46,30 +45,7 @@ onMounted(async () => {
 
 const openQuestionModal = (index: number | null) => {
     editingQuestionIndex.value = index;
-    currentQuestion.value =
-        index !== null
-            ? new QuestionDto({
-                  ...quizModel.value!.questions[index],
-              })
-            : new QuestionDto({ options: ["", "", "", ""] });
     isQuestionModalOpen.value = true;
-};
-
-const addOption = () => {
-    currentQuestion.value.options.push("");
-};
-
-const removeOption = (index: number) => {
-    if (currentQuestion.value.options.length > 2) {
-        currentQuestion.value.options.splice(index, 1);
-        if (
-            currentQuestion.value.correctAnswer >=
-            currentQuestion.value.options.length
-        ) {
-            currentQuestion.value.correctAnswer =
-                currentQuestion.value.options.length - 1;
-        }
-    }
 };
 
 const deleteQuestion = (index: number) => {
@@ -82,7 +58,7 @@ const updateQuiz = async (updateQuiz: UpdateQuizRequestDto) => {
     if (!quizModel.value) return;
     saving.value = true;
     try {
-        await schoolStore.updateQuiz(updateQuiz);
+        await quizStore.updateQuiz(updateQuiz);
         router.push("/quiz"); // Redirect to quizzes list or dashboard
     } catch (error) {
         console.error("Failed to save quiz:", error);

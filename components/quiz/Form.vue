@@ -148,7 +148,7 @@
                                 :questionModelProp="currentQuestion"
                                 :index="editingQuestionIndex"
                                 @cancel="onCancelQuestion"
-                                @save="onAddQuestion"
+                                @save="onSaveQuestion"
                             />
                         </form>
                     </main>
@@ -156,17 +156,21 @@
             </Dialog>
 
             <!-- Question Render -->
-             <section>
-                <div v-for="(question, index) in questionsForRender" :key="index" class="mb-4">
+            <section>
+                <div
+                    v-for="(question) in questionsForRender"
+                    :key="question.index"
+                    class="mb-4"
+                >
                     <QuizQuestionMultipleChoiceReview
-                        v-if="question.type === 'multiple-choice'"
-                        :question="question.getModel<MultipleChoiceQuestionModelDto>()"
-                        @edit="onOpenQuestionModal(index)"
+                        v-if="question.model.type === 'multiple-choice'"
+                        :question="question.model.getModel<MultipleChoiceQuestionModelDto>()"
+                        @edit="onOpenQuestionModal(question.index)"
+                        @delete="onDeleteQuestionModel(question.index)"
                     />
                     <!-- Add other question type reviews here -->
-
                 </div>
-             </section>
+            </section>
 
             <!-- Save Button -->
             <div class="mt-6 flex justify-end gap-4">
@@ -182,7 +186,6 @@
 </template>
 
 <script lang="ts" setup>
-
 const isQuestionModalOpen = ref(false);
 const editingQuestionIndex = ref<number>(-1);
 const currentQuestion = ref<QuestionModelDto>(new QuestionModelDto());
@@ -201,16 +204,20 @@ const emit = defineEmits<{
     (e: "cancel"): void;
 }>();
 
-const onSaveQuiz = async () => {
-    console.log("Saving quiz:", quizModel.value.updateQuizRequestDto);
-    await props.onUpdateQuiz(quizModel.value.updateQuizRequestDto).finally(() => {
-        emit("save");
-    })  ;
-};
+const onSaveQuiz = quizModel.value.formContext.handleSubmit(async () => {
+    await props
+        .onUpdateQuiz(quizModel.value.updateQuizRequestDto)
+        .finally(() => {
+            emit("save");
+        });
+});
 
-const onAddQuestion = (value: QuestionDto) => {
-    quizModel.value.questions.push(value);
-    console.log(quizModel.value);
+const onSaveQuestion = (value: QuestionDto) => {
+    if (editingQuestionIndex.value !== -1) {
+        quizModel.value.questions[editingQuestionIndex.value] = value;
+    } else {
+        quizModel.value.questions.push(value);
+    }
     isQuestionModalOpen.value = false;
 };
 
@@ -227,6 +234,10 @@ const onOpenQuestionModal = (index: number) => {
     }
 };
 
+const onDeleteQuestionModel = (index: number) => {
+    quizModel.value.questions[index].status = 'deleted'
+}
+
 const onCancelQuestion = () => {
     isQuestionModalOpen.value = false;
     editingQuestionIndex.value = -1;
@@ -236,13 +247,11 @@ const onCancel = () => {
     emit("cancel");
 };
 
-
-const questionsForRender = computed(() => {
-    return quizModel.value.questions;
-})
+const questionsForRender = computed((): { model: QuestionDto, index: number}[] => {
+    return quizModel.value.questions.map((qt, index) => ({ model: qt, index })).filter((qt) => qt.model.status !== 'deleted');
+});
 
 onMounted(() => {
     currentQuestion.value.type = "multiple-choice";
 });
 </script>
-
