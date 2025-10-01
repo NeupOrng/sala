@@ -64,9 +64,51 @@ const useQuizApi = () => {
         }
     };
 
+    const updateQuiz = async (
+        updateQuizDto: UpdateQuizRequestDto
+    ): Promise<void> => {
+        try {
+            const rawResponse = await $apiFetch(
+                `/api/protected/quiz/${updateQuizDto.quizId}`,
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: updateQuizDto.jsonString,
+                }
+            );
+            const response: {
+                statusCode: number;
+                statusMessage?: string;
+                data?: { quiz: any };
+            } = rawResponse as any;
+            if (response.statusCode !== 200) {
+                throw new Error(
+                    response.statusMessage || "Failed to update quiz"
+                );
+            }
+            addNotification({
+                title: "Quiz Updated",
+                description:
+                    response.statusMessage || "Quiz updated successfully",
+                type: "default",
+                duration: 4000,
+            });
+        } catch (err) {
+            console.error("Unexpected error updating quiz:", err);
+            addNotification({
+                title: "Update Quiz Error",
+                description: (err as Error).message || "Unknown error",
+                type: "destructive",
+                duration: 4000,
+            });
+        }
+    };
+
     return {
         fetchQuizzes,
         fetchQuizById,
+        updateQuiz,
     };
 };
 

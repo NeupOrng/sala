@@ -403,4 +403,21 @@ export class UpdateQuizRequestDto {
             ? json.questions.map((value: any) => new QuestionDto(value))
             : [];
     }
+
+    get jsonString(): string {
+        return JSON.stringify({
+            quizId: this.quizId,
+            title: this.title,
+            description: this.description,
+            startTime: new Date(this.startTime).toISOString(),
+            endTime: new Date(this.endTime).toISOString(),
+            classId: this.classId,
+            status: this.status,
+            questions: this.questions.map((q) => ({
+                questionId: q.questionId,
+                content: q.content,
+                type: q.type,
+            })),
+        });
+    }
 }

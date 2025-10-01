@@ -190,7 +190,7 @@ export const useSchoolStore = defineStore("schoolStore", () => {
     }
 
     async function updateQuiz(quizModel: UpdateQuizRequestDto) {
-        console.log(quizModel);
+        await quizApi.updateQuiz(quizModel);
     }
 
     async function initialize() {
