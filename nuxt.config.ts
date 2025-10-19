@@ -1,11 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
-    nitro: {
-        preset: "cloudflare-pages",
-        externals: {
-            external: ["pg-native", "pg"], // Exclude both to be safe
-        },
-    },
     components: [
         {
             path: "~/components/ui", // Target the ui subdirectory
@@ -33,11 +27,6 @@ export default defineNuxtConfig({
     },
     vite: {
         plugins: [tailwindcss()],
-        resolve: {
-            alias: {
-                "cloudflare:sockets": "/empty-module.js",
-            },
-        },
         optimizeDeps: {
             exclude: ["pg"],
         },
