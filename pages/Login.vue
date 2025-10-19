@@ -7,7 +7,8 @@ import ProfileRole from "~/model/enums/profile-role.enum";
 
 const { addNotification } = useNotification();
 const profileStore = useProfileStore();
-const loginModel:ILoginModel = {
+const loadingStore = useLoadingStore();
+const loginModel: ILoginModel = {
     username: "",
     password: "",
 };
@@ -23,17 +24,16 @@ const onSubmit = formContext.handleSubmit(async (values) => {
     try {
         const result = await profileStore.login(values); // assuming you have a login action
         if (result.isSuccess) {
-            
             addNotification({
                 title: "Login Success",
                 description: "Login success successfully",
                 type: "default",
                 duration: 4000,
-            })
-            if(profileStore.userProfile.role === ProfileRole.TEACHER) {
-                navigateTo('/school');
+            });
+            if (profileStore.userProfile.role === ProfileRole.TEACHER) {
+                navigateTo("/school");
             } else {
-                navigateTo('/');
+                navigateTo("/");
             }
         } else {
             addNotification({
@@ -41,7 +41,7 @@ const onSubmit = formContext.handleSubmit(async (values) => {
                 description: result.message,
                 type: "destructive",
                 duration: 4000,
-            })
+            });
         }
     } catch (err) {
         addNotification({
@@ -49,8 +49,14 @@ const onSubmit = formContext.handleSubmit(async (values) => {
             description: "Login success successfully",
             type: "destructive",
             duration: 4000,
-        })
+        });
     }
+});
+
+onMounted(() => {
+    setTimeout(() => {
+        loadingStore.hideLoading();
+    }, 100);
 });
 </script>
 
@@ -58,7 +64,9 @@ const onSubmit = formContext.handleSubmit(async (values) => {
     <ClientOnly>
         <div class="min-h-[calc(100vh-50px)] flex flex-col">
             <AppNotificationStack />
-            <main class="flex-1 flex items-center justify-center bg-gray-50 px-6 py-12">
+            <main
+                class="flex-1 flex items-center justify-center bg-gray-50 px-6 py-12"
+            >
                 <form
                     @submit="onSubmit"
                     class="bg-white shadow-md rounded-lg p-8 w-full max-w-md"
@@ -72,7 +80,11 @@ const onSubmit = formContext.handleSubmit(async (values) => {
                         <FormItem class="mb-4">
                             <FormLabel>Username</FormLabel>
                             <FormControl>
-                                <Input type="text" placeholder="username" v-bind="componentField" />
+                                <Input
+                                    type="text"
+                                    placeholder="username"
+                                    v-bind="componentField"
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -83,7 +95,11 @@ const onSubmit = formContext.handleSubmit(async (values) => {
                         <FormItem class="mb-4">
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <Input type="password" placeholder="********" v-bind="componentField" />
+                                <Input
+                                    type="password"
+                                    placeholder="********"
+                                    v-bind="componentField"
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -94,7 +110,10 @@ const onSubmit = formContext.handleSubmit(async (values) => {
                             <input type="checkbox" class="mr-2 leading-tight" />
                             <span class="text-gray-600">Remember me</span>
                         </label>
-                        <NuxtLink to="/forgot-password" class="text-sm text-blue-500 hover:underline">
+                        <NuxtLink
+                            to="/forgot-password"
+                            class="text-sm text-blue-500 hover:underline"
+                        >
                             Forgot password?
                         </NuxtLink>
                     </div>

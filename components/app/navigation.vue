@@ -56,7 +56,7 @@ const profileStore = useProfileStore();
 
 async function onLogout() {
     await profileStore.logout().then(() => {
-        navigateTo('/login')
+        navigateTo('/')
     });
 }
 </script>

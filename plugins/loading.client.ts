@@ -11,7 +11,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   // Handle route errors to ensure loading screen hides
   nuxtApp.hook('app:error', async () => {
-    await loadingStore.hideLoading()
+    loadingStore.hideLoading()
   })
 
   // Ensure loading screen shows on initial client-side load

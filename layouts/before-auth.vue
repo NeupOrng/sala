@@ -17,7 +17,7 @@ const { addNotification } = useNotification()
       </main>
 
       <!-- Footer -->
-      <footer class="w-full border-t">
+      <footer class="w-full mt-auto border-t">
         <div class="container mx-auto px-6 py-4 text-center text-sm text-gray-500">
           &copy; {{ new Date().getFullYear() }} MyApp. All rights reserved.
         </div>
